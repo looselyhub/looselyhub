@@ -27,6 +27,28 @@ class Mongo {
       this.close()
     }
   }
+
+  async insert(table: string, newRow: object) {
+    const db = await this.connect()
+    try {
+      const result = await db.collection(table).insert(newRow)
+      return result
+    } finally {
+      this.close()
+    }
+  }
+
+  async update(table: string, query: object, newValues: object) {
+    const db = await this.connect()
+    try {
+      const result = await db
+        .collection(table)
+        .update(query, { $set: newValues })
+      return result
+    } finally {
+      this.close()
+    }
+  }
 }
 
 export default Mongo

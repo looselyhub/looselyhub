@@ -1,7 +1,7 @@
 import NextAuth from 'next-auth'
 import Providers from 'next-auth/providers'
 import bcrypt from 'bcrypt'
-import Mongo from '../Mongo'
+import Mongo from '../../../services/Mongo'
 
 // TUTORIAL: https://blog.logrocket.com/using-authentication-in-next-js/
 

@@ -33,7 +33,10 @@ class SaasList {
   }
 
   getHomeURL() {
-    return this._home.url
+    if (this._home) {
+      return this._home.url
+    }
+    return ''
   }
 }
 
