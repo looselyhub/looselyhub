@@ -9,7 +9,7 @@ function Index() {
   const router = useRouter()
   useEffect(() => {
     if (!loading && session) {
-      router.push('/dashboard')
+      router.push('/home')
     }
   }, [loading])
 

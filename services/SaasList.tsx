@@ -5,38 +5,43 @@ interface SaasObject {
   url: string
   _id: string
   user: string
+  slug: string
+  isHome: boolean
 }
 
 class SaasList {
-  private _list: SaasObject[]
+  private _list: {
+    [key: string]: SaasObject
+  }
   private _home: SaasObject
 
   constructor() {
-    this._list = []
+    this._list = {}
   }
 
   async fetchList() {
     const response = await axios.get('/api/fetchSaasList')
-    const newList = []
-    response.data.forEach((element) => {
+    response.data.forEach((element: SaasObject) => {
       if (element.isHome) {
         this._home = element
       } else {
-        newList.push(element)
+        this._list[element.slug] = element
       }
     })
-    this._list = newList
+  }
+
+  getURLForSlug(path: string) {
+    const slug = path.replace('/', '')
+    if (slug === 'home' && this._home) {
+      return this._home.url
+    } else if (Object.keys(this._list).length > 0 && this._list[slug]) {
+      return this._list[slug].url
+    }
+    return ''
   }
 
   getList() {
-    return this._list
-  }
-
-  getHomeURL() {
-    if (this._home) {
-      return this._home.url
-    }
-    return ''
+    return Object.keys(this._list).map((key) => this._list[key])
   }
 }
 

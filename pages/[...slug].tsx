@@ -23,6 +23,7 @@ import PrivateRoute from '../components/PrivateRoute'
 import Saas from '../components/Saas'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import SaasList from '../services/SaasList'
+import { useRouter } from 'next/router'
 
 const drawerWidth = 240
 
@@ -88,8 +89,7 @@ const useStyles = makeStyles((theme: Theme) =>
 )
 
 function Dashboard() {
-  // TODO: Fetch micro-sass
-  // TODO: List micro-sass
+  const router = useRouter()
   const classes = useStyles()
   const theme = useTheme()
   const matches = useMediaQuery(theme.breakpoints.up('md'))
@@ -100,7 +100,7 @@ function Dashboard() {
   async function fetchSaasList() {
     const saasListObj = new SaasList()
     await saasListObj.fetchList()
-    setURL(saasListObj.getHomeURL())
+    setURL(saasListObj.getURLForSlug(router.asPath))
     setSaasList(saasListObj)
   }
 
@@ -111,6 +111,10 @@ function Dashboard() {
   useEffect(() => {
     setOpen(matches)
   }, [matches])
+
+  useEffect(() => {
+    setURL(saasList.getURLForSlug(router.asPath))
+  }, [router, saasList])
 
   const handleDrawerOpen = () => {
     setOpen(true)
@@ -166,17 +170,14 @@ function Dashboard() {
         )}
         <Divider />
         <ListItem button key={'HOME'}>
-          <ListItemText
-            primary={'HOME'}
-            onClick={() => setURL(saasList.getHomeURL())}
-          />
+          <ListItemText primary={'HOME'} onClick={() => router.push('/home')} />
         </ListItem>
         <List>
           {saasList.getList().map((page) => (
             <ListItem button key={page.title}>
               <ListItemText
                 primary={page.title}
-                onClick={() => setURL(page.url)}
+                onClick={() => router.push(page.slug)}
               />
             </ListItem>
           ))}
