@@ -11,6 +11,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import Container from '@material-ui/core/Container'
 import Alert from '@material-ui/lab/Alert'
 import { signIn } from 'next-auth/client'
+import axios from 'axios'
 
 function Copyright() {
   return (
@@ -49,11 +50,19 @@ export default function SignIn() {
   const classes = useStyles()
   const [email, setEmail] = useState('')
   const [showAlert, setShowAlert] = useState(false)
+  const [showErrorAlert, setShowErrorAlet] = useState(false)
 
   async function handleSubmit(event) {
-    signIn('email', { email })
-    setShowAlert(true)
     event.preventDefault()
+    try {
+      await axios.post('/api/checkUser', { email })
+      signIn('email', { email })
+      setShowAlert(true)
+      setShowErrorAlet(false)
+    } catch (error) {
+      setShowErrorAlet(true)
+      setShowAlert(false)
+    }
   }
 
   return (
@@ -91,6 +100,11 @@ export default function SignIn() {
             <Alert severity="success">
               A sign in link has been sent to your email address!
             </Alert>
+          ) : (
+            <div />
+          )}
+          {showErrorAlert ? (
+            <Alert severity="error">This email is not registered yet!</Alert>
           ) : (
             <div />
           )}
