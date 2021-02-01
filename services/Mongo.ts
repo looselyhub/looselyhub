@@ -31,19 +31,24 @@ class Mongo {
   async insert(table: string, newRow: object) {
     const db = await this.connect()
     try {
-      const result = await db.collection(table).insert(newRow)
+      const result = await db.collection(table).insertOne(newRow)
       return result
     } finally {
       this.close()
     }
   }
 
-  async update(table: string, query: object, newValues: object) {
+  async update(
+    table: string,
+    query: object,
+    newValues: object,
+    upsert = false
+  ) {
     const db = await this.connect()
     try {
       const result = await db
         .collection(table)
-        .update(query, { $set: newValues })
+        .update(query, { $set: newValues }, { upsert })
       return result
     } finally {
       this.close()

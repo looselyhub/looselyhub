@@ -11,27 +11,41 @@ async function getAdminUser(token: string) {
   throw new ErrorManager('Invalid token', 401)
 }
 
-async function getURLUser(username: string) {
+async function addUser(adminUser: { _id: string }, username: string) {
+  const mongo = new Mongo()
+  await mongo.insert('users', {
+    owner: adminUser._id,
+    username: username,
+    email: username,
+    createdAt: new Date(),
+  })
+}
+
+async function getURLUser(adminUser: { _id: string }, username: string) {
   const mongo = new Mongo()
   const response = await mongo.query('users', { username })
   if (response.length === 1) {
     return response[0]
   }
-  throw new ErrorManager('Username not found', 411)
+  const user = await addUser(adminUser, username)
+  return user
 }
 
 async function checkForSlug(
   adminUser: { _id: string },
   user: { _id: string },
-  slug: string
+  body: {
+    slug: string
+    overwrite: boolean
+  }
 ) {
   const mongo = new Mongo()
   const response = await mongo.query('micro-saas', {
     owner: adminUser._id,
     user: user._id,
-    slug,
+    slug: body.slug,
   })
-  if (response.length === 1) {
+  if (response.length === 1 && !body.overwrite) {
     throw new ErrorManager('Slug already used for user', 421)
   }
 }
@@ -48,15 +62,28 @@ async function unsetOldHome(adminUser: { _id: string }, user: { _id: string }) {
 async function addRow(
   adminUser: { _id: string },
   user: { _id: string },
-  body: object
+  body: {
+    title: string
+    url: string
+    isHome: boolean
+    slug: string
+  }
 ) {
   const mongo = new Mongo()
-  await mongo.insert('micro-saas', {
-    ...body,
+  const requestBody = {
+    title: body.title,
+    url: body.url,
+    isHome: body.isHome,
+    slug: body.slug,
     owner: adminUser._id,
     user: user._id,
-    isHome: true,
-  })
+  }
+  await mongo.update(
+    'micro-saas',
+    { user: user._id, slug: body.slug },
+    requestBody,
+    true
+  )
 }
 
 function checkString(key: string, value: any) {
@@ -83,17 +110,16 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     validateBody(body)
     const adminUser = await getAdminUser(token)
     // DONE: Get user for username
-    const urlUser = await getURLUser(body.username)
+    const urlUser = await getURLUser(adminUser, body.username)
     // DONE: Check if slug exists
-    await checkForSlug(adminUser, urlUser, body.slug)
+    await checkForSlug(adminUser, urlUser, body)
     // DONE: Check if isHome true. YES check if already exists for user. YES change remove for url
     if (body.isHome) {
       await unsetOldHome(adminUser, urlUser)
     }
-    // TODO: Create row for table link
     await addRow(adminUser, urlUser, body)
     res.status(200)
-    return res.json({ text: 'URL adicionada com sucesso!' })
+    return res.json({ text: 'URL added for username!' })
   } catch (error) {
     if (error instanceof ErrorManager) {
       res.status(error.code)
