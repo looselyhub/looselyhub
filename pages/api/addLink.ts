@@ -1,15 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import ErrorManager from '../../services/ErrorManager'
+import ServerUtils from '../../services/ServerUtils'
 import Mongo from '../../services/Mongo'
-
-async function getAdminUser(token: string) {
-  const mongo = new Mongo()
-  const response = await mongo.query('users', { token })
-  if (response.length === 1) {
-    return response[0]
-  }
-  throw new ErrorManager('Invalid token', 401)
-}
 
 async function addUser(adminUser: { _id: string }, username: string) {
   const mongo = new Mongo()
@@ -19,35 +11,6 @@ async function addUser(adminUser: { _id: string }, username: string) {
     email: username,
     createdAt: new Date(),
   })
-}
-
-async function getURLUser(adminUser: { _id: string }, username: string) {
-  const mongo = new Mongo()
-  const response = await mongo.query('users', { username })
-  if (response.length === 1) {
-    return response[0]
-  }
-  const user = await addUser(adminUser, username)
-  return user
-}
-
-async function checkForSlug(
-  adminUser: { _id: string },
-  user: { _id: string },
-  body: {
-    slug: string
-    overwrite: boolean
-  }
-) {
-  const mongo = new Mongo()
-  const response = await mongo.query('micro-saas', {
-    owner: adminUser._id,
-    user: user._id,
-    slug: body.slug,
-  })
-  if (response.length === 1 && !body.overwrite) {
-    throw new ErrorManager('Slug already used for user', 421)
-  }
 }
 
 async function unsetOldHome(adminUser: { _id: string }, user: { _id: string }) {
@@ -86,17 +49,11 @@ async function addRow(
   )
 }
 
-function checkString(key: string, value: any) {
-  if (value === undefined || typeof value !== 'string') {
-    throw new ErrorManager(`Invalid {${key}}. {${key}} must be string!`, 402)
-  }
-}
-
 function validateBody(body: any) {
-  checkString('title', body.title)
-  checkString('url', body.url)
-  checkString('username', body.username)
-  checkString('slug', body.slug)
+  ServerUtils.checkString('title', body.title)
+  ServerUtils.checkString('url', body.url)
+  ServerUtils.checkString('username', body.username)
+  ServerUtils.checkString('slug', body.slug)
   if (body.isHome && typeof body.isHome !== 'boolean') {
     throw new ErrorManager('Invalid "isHome". "isHome" must be boolean!', 402)
   }
@@ -108,12 +65,15 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     const { body } = req
     const token = authorization.split(' ')[1]
     validateBody(body)
-    const adminUser = await getAdminUser(token)
-    // DONE: Get user for username
-    const urlUser = await getURLUser(adminUser, body.username)
-    // DONE: Check if slug exists
-    await checkForSlug(adminUser, urlUser, body)
-    // DONE: Check if isHome true. YES check if already exists for user. YES change remove for url
+    const adminUser = await ServerUtils.getAdminUser(token)
+    let urlUser = await ServerUtils.getURLUser(body.username)
+    if (urlUser === undefined) {
+      urlUser = await addUser(adminUser, body.username)
+    }
+    const slugExists = await ServerUtils.checkForSlug(adminUser, urlUser, body)
+    if (slugExists) {
+      throw new ErrorManager('Slug already used for user', 421)
+    }
     if (body.isHome) {
       await unsetOldHome(adminUser, urlUser)
     }

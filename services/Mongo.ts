@@ -54,6 +54,16 @@ class Mongo {
       this.close()
     }
   }
+
+  async delete(table: string, query: object) {
+    const db = await this.connect()
+    try {
+      const result = await db.collection(table).deleteOne(query)
+      return result
+    } finally {
+      this.close()
+    }
+  }
 }
 
 export default Mongo
