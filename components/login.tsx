@@ -9,9 +9,8 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 import Container from '@material-ui/core/Container'
+import Alert from '@material-ui/lab/Alert'
 import { signIn } from 'next-auth/client'
-
-// TODO: Remove material-ui
 
 function Copyright() {
   return (
@@ -48,11 +47,12 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignIn() {
   const classes = useStyles()
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+  const [email, setEmail] = useState('')
+  const [showAlert, setShowAlert] = useState(false)
 
   async function handleSubmit(event) {
-    signIn('credentials', { username, password })
+    signIn('email', { email })
+    setShowAlert(true)
     event.preventDefault()
   }
 
@@ -72,23 +72,11 @@ export default function SignIn() {
             margin="normal"
             required
             fullWidth
-            id="username"
-            label="Username"
-            name="username"
-            onChange={(event) => setUsername(event.target.value)}
+            id="email"
+            label="Email"
+            name="email"
+            onChange={(event) => setEmail(event.target.value)}
             autoFocus
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            onChange={(event) => setPassword(event.target.value)}
-            autoComplete="current-password"
           />
           <Button
             type="submit"
@@ -97,8 +85,15 @@ export default function SignIn() {
             color="primary"
             className={classes.submit}
           >
-            Sign In
+            Sign In with email
           </Button>
+          {showAlert ? (
+            <Alert severity="success">
+              A sign in link has been sent to your email address!
+            </Alert>
+          ) : (
+            <div />
+          )}
         </form>
       </div>
       <Box mt={8}>
