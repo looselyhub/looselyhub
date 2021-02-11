@@ -2,6 +2,7 @@ import NextAuth from 'next-auth'
 import Providers from 'next-auth/providers'
 import bcrypt from 'bcrypt'
 import Mongo from '../../../services/Mongo'
+import { LoginLog } from '../logEvent'
 
 // TUTORIAL: https://blog.logrocket.com/using-authentication-in-next-js/
 
@@ -66,6 +67,12 @@ const options = {
     updateAge: 24 * 60 * 60,
   },
   callbacks: {
+    signIn: async (user, account, profile) => {
+      if (!profile.verificationRequest) {
+        LoginLog(user.id)
+      }
+      return true
+    },
     jwt: async (token, user) => {
       user && (token.user = user)
       return Promise.resolve(token) // ...here

@@ -24,6 +24,7 @@ import Saas from '../components/Saas'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import SaasList from '../services/SaasList'
 import { useRouter } from 'next/router'
+import LogEvent from '../services/LogEvent'
 
 const drawerWidth = 240
 
@@ -106,6 +107,10 @@ function Dashboard() {
 
   useEffect(() => {
     fetchSaasList()
+    window.addEventListener('beforeunload', () => {
+      const eventLogger = new LogEvent()
+      eventLogger.close()
+    })
   }, [])
 
   useEffect(() => {
@@ -113,7 +118,12 @@ function Dashboard() {
   }, [matches])
 
   useEffect(() => {
-    setURL(saasList.getURLForSlug(router.asPath))
+    const url = saasList.getURLForSlug(router.asPath)
+    if (url !== '') {
+      const eventLogger = new LogEvent()
+      eventLogger.pageView(router.asPath)
+    }
+    setURL(url)
   }, [router, saasList])
 
   const handleDrawerOpen = () => {
