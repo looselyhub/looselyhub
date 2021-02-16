@@ -6,7 +6,6 @@
   position: relative;
 }
 
-
 .login {
   margin-top: 20vh;
   height: 100%;
@@ -24,7 +23,8 @@
     margin-left: auto;
     margin-right: auto;
   }
-  h2, p {
+  h2,
+  p {
     font-weight: 400;
     width: 100%;
     text-align: center;
@@ -34,11 +34,11 @@
     margin-left: auto;
     margin-right: auto;
     width: 80%;
-		background: #Fefefe;
-		box-shadow: 0 6px 10px 0 rgba(0, 0, 0 , .1);
-		border: 0;
-		outline: 0;
-		padding: 22px 18px;
+    background: #fefefe;
+    box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.1);
+    border: 0;
+    outline: 0;
+    padding: 22px 18px;
   }
 
   button {
@@ -47,7 +47,7 @@
     text-align: center;
     text-decoration: none;
     width: 90%;
-    background-color: #EF767A;
+    background-color: #ef767a;
     border: none;
     color: white;
     margin-top: 16px;
