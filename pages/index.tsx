@@ -4,7 +4,6 @@ import Login from '../components/login'
 import { useSession } from 'next-auth/client'
 import { useRouter } from 'next/router'
 import Loading from '../components/Loading'
-
 function Index() {
   const [session, loading] = useSession()
   const router = useRouter()

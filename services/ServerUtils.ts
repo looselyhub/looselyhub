@@ -22,20 +22,30 @@ class ServerUtils {
 
   static async checkForSlug(
     adminUser: { _id: string },
-    user: { _id: string },
     body: {
       slug: string
       overwrite: boolean
-    }
+    },
+    user?: { _id: string }
   ) {
     const mongo = new Mongo()
-    const response = await mongo.query('micro-saas', {
-      owner: adminUser._id,
-      user: user._id,
-      slug: body.slug,
-    })
-    if (response.length === 1 && !body.overwrite) {
-      return true
+    if (user) {
+      const response = await mongo.query('micro-saas', {
+        owner: adminUser._id,
+        user: user._id,
+        slug: body.slug,
+      })
+      if (response.length === 1 && !body.overwrite) {
+        return true
+      }
+    } else {
+      const response = await mongo.query('micro-saas', {
+        owner: adminUser._id,
+        slug: body.slug,
+      })
+      if (response.length === 1 && !body.overwrite) {
+        return true
+      }
     }
     return false
   }

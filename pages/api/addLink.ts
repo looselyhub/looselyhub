@@ -13,46 +13,63 @@ async function addUser(adminUser: { _id: string }, username: string) {
   })
 }
 
-async function unsetOldHome(adminUser: { _id: string }, user: { _id: string }) {
+async function unsetOldHome(
+  adminUser: { _id: string },
+  user?: { _id: string }
+) {
   const mongo = new Mongo()
-  await mongo.update(
-    'micro-saas',
-    { owner: adminUser._id, user: user._id, isHome: true },
-    { isHome: false }
-  )
+  if (user) {
+    await mongo.update(
+      'micro-saas',
+      { owner: adminUser._id, user: user._id, isHome: true },
+      { isHome: false }
+    )
+  } else {
+    await mongo.update(
+      'micro-saas',
+      { owner: adminUser._id, isHome: true },
+      { isHome: false }
+    )
+  }
 }
 
 async function addRow(
   adminUser: { _id: string },
-  user: { _id: string },
   body: {
     title: string
     url: string
     isHome: boolean
     slug: string
-  }
+  },
+  user?: { _id: string }
 ) {
   const mongo = new Mongo()
-  const requestBody = {
+  const requestBody: any = {
     title: body.title,
     url: body.url,
     isHome: body.isHome,
     slug: body.slug,
     owner: adminUser._id,
-    user: user._id,
   }
-  await mongo.update(
-    'micro-saas',
-    { user: user._id, slug: body.slug },
-    requestBody,
-    true
-  )
+  if (user) {
+    requestBody.user = user._id
+    await mongo.update(
+      'micro-saas',
+      { user: user._id, slug: body.slug },
+      requestBody,
+      true
+    )
+  } else {
+    await mongo.update('micro-saas', { slug: body.slug }, requestBody, true)
+  }
 }
 
 function validateBody(body: any) {
   ServerUtils.checkString('title', body.title)
   ServerUtils.checkString('url', body.url)
-  ServerUtils.checkString('username', body.username)
+  if (body.isPublic !== true) {
+    ServerUtils.checkString('username', body.username)
+  }
   ServerUtils.checkString('slug', body.slug)
   if (body.isHome && typeof body.isHome !== 'boolean') {
     throw new ErrorManager('Invalid "isHome". "isHome" must be boolean!', 402)
@@ -64,20 +81,24 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const { body } = req
     const token = authorization.split(' ')[1]
+
     validateBody(body)
     const adminUser = await ServerUtils.getAdminUser(token)
-    let urlUser = await ServerUtils.getURLUser(body.username)
-    if (urlUser === undefined) {
-      urlUser = await addUser(adminUser, body.username)
+    let urlUser
+    if (body.isPublic !== true) {
+      urlUser = await ServerUtils.getURLUser(body.username)
+      if (urlUser === undefined) {
+        urlUser = await addUser(adminUser, body.username)
+      }
     }
-    const slugExists = await ServerUtils.checkForSlug(adminUser, urlUser, body)
+    const slugExists = await ServerUtils.checkForSlug(adminUser, body, urlUser)
     if (slugExists) {
       throw new ErrorManager('Slug already used for user', 421)
     }
     if (body.isHome) {
       await unsetOldHome(adminUser, urlUser)
     }
-    await addRow(adminUser, urlUser, body)
+    await addRow(adminUser, body, urlUser)
     res.status(200)
     return res.json({ text: 'URL added for username!' })
   } catch (error) {
