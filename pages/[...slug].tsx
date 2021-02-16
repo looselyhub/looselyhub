@@ -1,101 +1,16 @@
 import React, { useEffect, useState } from 'react'
-import clsx from 'clsx'
-import {
-  makeStyles,
-  useTheme,
-  Theme,
-  createStyles,
-} from '@material-ui/core/styles'
-import Drawer from '@material-ui/core/Drawer'
-import CssBaseline from '@material-ui/core/CssBaseline'
-import AppBar from '@material-ui/core/AppBar'
-import Toolbar from '@material-ui/core/Toolbar'
-import List from '@material-ui/core/List'
-import Typography from '@material-ui/core/Typography'
-import Divider from '@material-ui/core/Divider'
-import IconButton from '@material-ui/core/IconButton'
-import MenuIcon from '@material-ui/icons/Menu'
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemText from '@material-ui/core/ListItemText'
 import Head from 'next/head'
 import PrivateRoute from '../components/PrivateRoute'
 import Saas from '../components/Saas'
-import useMediaQuery from '@material-ui/core/useMediaQuery'
 import SaasList from '../services/SaasList'
 import { useRouter } from 'next/router'
 import LogEvent from '../services/LogEvent'
-
-const drawerWidth = 240
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      display: 'flex',
-    },
-    appBar: {
-      transition: theme.transitions.create(['margin', 'width'], {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen,
-      }),
-    },
-    appBarShift: {
-      width: `calc(100% - ${drawerWidth}px)`,
-      marginLeft: drawerWidth,
-      transition: theme.transitions.create(['margin', 'width'], {
-        easing: theme.transitions.easing.easeOut,
-        duration: theme.transitions.duration.enteringScreen,
-      }),
-    },
-    menuButton: {
-      marginRight: theme.spacing(2),
-    },
-    hide: {
-      display: 'none',
-    },
-    drawer: {
-      width: drawerWidth,
-      flexShrink: 0,
-    },
-    drawerPaper: {
-      width: drawerWidth,
-    },
-    drawerHeader: {
-      display: 'flex',
-      alignItems: 'center',
-      padding: theme.spacing(0, 1),
-      [theme.breakpoints.down('md')]: {
-        ...theme.mixins.toolbar,
-      },
-      justifyContent: 'flex-end',
-    },
-    content: {
-      height: '100%',
-      flexGrow: 1,
-      transition: theme.transitions.create('margin', {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen,
-      }),
-      marginLeft: -drawerWidth,
-    },
-    contentShift: {
-      height: '100%',
-      transition: theme.transitions.create('margin', {
-        easing: theme.transitions.easing.easeOut,
-        duration: theme.transitions.duration.enteringScreen,
-      }),
-      marginLeft: 0,
-    },
-  })
-)
+import styles from '../styles/slug.module.scss'
 
 function Dashboard() {
   const router = useRouter()
-  const classes = useStyles()
-  const theme = useTheme()
-  const matches = useMediaQuery(theme.breakpoints.up('md'))
   const [currentURL, setURL] = useState('')
-  const [open, setOpen] = useState(matches)
+  const [open, setOpen] = useState(false)
   const [saasList, setSaasList] = useState<SaasList>(new SaasList())
 
   async function fetchSaasList() {
@@ -114,10 +29,6 @@ function Dashboard() {
   }, [])
 
   useEffect(() => {
-    setOpen(matches)
-  }, [matches])
-
-  useEffect(() => {
     const url = saasList.getURLForSlug(router.asPath)
     if (url !== '') {
       const eventLogger = new LogEvent()
@@ -126,96 +37,88 @@ function Dashboard() {
     setURL(url)
   }, [router, saasList])
 
-  const handleDrawerOpen = () => {
-    setOpen(true)
-  }
-
-  const handleDrawerClose = () => {
-    setOpen(false)
+  function changeMenu() {
+    setOpen(!open)
   }
 
   function appBar() {
     return (
-      <AppBar
-        position="fixed"
-        className={clsx(classes.appBar, {
-          [classes.appBarShift]: open,
-        })}
+      <div
+        className={open ? styles.hamburguer_change : styles.hamburguer}
+        onClick={() => changeMenu()}
       >
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            className={clsx(classes.menuButton, open && classes.hide)}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap>
-            Persistent drawer
-          </Typography>
-        </Toolbar>
-      </AppBar>
+        <div className={styles.bar1} />
+        <div className={styles.bar2} />
+        <div className={styles.bar3} />
+      </div>
+    )
+  }
+
+  function openStyle(openStatus: boolean) {
+    if (openStatus) return {}
+    return { display: 'none' }
+  }
+
+  function redirectToLooselyHub() {
+    window.location.href = 'http://www.google.com.br'
+  }
+
+  function renderLogo() {
+    return (
+      <div className={styles.logo}>
+        <img src="/logo.png" onClick={() => redirectToLooselyHub()} />
+      </div>
+    )
+  }
+
+  function renderHome() {
+    if (saasList.getHome() === undefined) return <div />
+    return (
+      <div key={'HOME'} className={styles.home}>
+        <a
+          onClick={() => {
+            setOpen(false)
+            router.push('home')
+          }}
+        >
+          HOME
+        </a>
+      </div>
     )
   }
 
   function drawer() {
     return (
-      <Drawer
-        className={classes.drawer}
-        variant="persistent"
-        anchor="left"
-        open={open}
-        classes={{
-          paper: classes.drawerPaper,
-        }}
-      >
-        {matches ? undefined : (
-          <div className={classes.drawerHeader}>
-            <IconButton onClick={handleDrawerClose}>
-              <ChevronLeftIcon />
-            </IconButton>
+      <div className={styles.sidebar} style={openStyle(open)}>
+        {renderLogo()}
+        {renderHome()}
+        {saasList.getList().map((page) => (
+          <div key={page.title}>
+            <a
+              onClick={() => {
+                setOpen(false)
+                router.push(page.slug)
+              }}
+            >
+              {page.title}
+            </a>
           </div>
-        )}
-        <Divider />
-        <ListItem button key={'HOME'}>
-          <ListItemText primary={'HOME'} onClick={() => router.push('/home')} />
-        </ListItem>
-        <List>
-          {saasList.getList().map((page) => (
-            <ListItem button key={page.title}>
-              <ListItemText
-                primary={page.title}
-                onClick={() => router.push(page.slug)}
-              />
-            </ListItem>
-          ))}
-        </List>
-        <Divider />
-      </Drawer>
+        ))}
+      </div>
     )
   }
 
   return (
-    <div className={classes.root}>
-      <CssBaseline />
+    <div>
       <Head>
         <link
           rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
         />
       </Head>
-      {matches ? <div /> : appBar()}
+      {appBar()}
       {drawer()}
-      <main
-        className={clsx(classes.content, {
-          [classes.contentShift]: open,
-        })}
-      >
-        <div className={classes.drawerHeader} />
-        <Saas url={currentURL} />
-      </main>
+      <Saas url={currentURL} />
       <style global jsx>{`
         html,
         body,

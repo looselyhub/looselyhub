@@ -28,6 +28,11 @@ class SaasList {
         this._list[element.slug] = element
       }
     })
+    if (this._home === undefined) {
+      const keys = Object.keys(this._list)
+      this._home = this._list[keys[keys.length - 1]]
+      delete this._list[keys[keys.length - 1]]
+    }
   }
 
   getURLForSlug(path: string) {
@@ -38,6 +43,10 @@ class SaasList {
       return this._list[slug].url
     }
     return ''
+  }
+
+  getHome() {
+    return this._home
   }
 
   getList() {
