@@ -20,7 +20,7 @@ class SaasList {
   }
 
   async fetchList() {
-    const response = await axios.get('/api/fetchSaasList')
+    const response = await axios.get('/api/user/urls')
     response.data.forEach((element: SaasObject) => {
       if (element.isHome) {
         this._home = element
@@ -41,6 +41,16 @@ class SaasList {
       return this._home.url
     } else if (Object.keys(this._list).length > 0 && this._list[slug]) {
       return this._list[slug].url
+    }
+    return ''
+  }
+
+  getTitleForSlug(path: string) {
+    const slug = path.replace('/', '')
+    if (slug === 'home' && this._home) {
+      return 'Home'
+    } else if (Object.keys(this._list).length > 0 && this._list[slug]) {
+      return this._list[slug].title
     }
     return ''
   }

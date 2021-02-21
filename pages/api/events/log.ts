@@ -1,10 +1,11 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 
 import { NextApiRequest, NextApiResponse } from 'next'
-import ErrorManager from '../../services/ErrorManager'
-import Mongo from '../../services/Mongo'
+import ErrorManager from '../../../services/ErrorManager'
+import Mongo from '../../../services/Mongo'
 import { getSession } from 'next-auth/client'
 import { ObjectID } from 'mongodb'
+import ym from 'react-yandex-metrika'
 
 async function addRow(
   user: {
@@ -26,6 +27,7 @@ async function addRow(
     owner: user.owner,
     username: user.username,
   }
+  ym(requestBody.name, requestBody.username, requestBody.slug)
   await mongo.insert('events', requestBody)
 }
 

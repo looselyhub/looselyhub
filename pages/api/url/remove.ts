@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import ErrorManager from '../../services/ErrorManager'
-import ServerUtils from '../../services/ServerUtils'
-import Mongo from '../../services/Mongo'
+import ErrorManager from '../../../services/ErrorManager'
+import ServerUtils from '../../../services/ServerUtils'
+import Mongo from '../../../services/Mongo'
 
 function validateBody(body: any) {
   ServerUtils.checkString('username', body.username)
@@ -9,13 +9,16 @@ function validateBody(body: any) {
 }
 
 async function removeRow(
-  user: { _id: string },
   body: {
     slug: string
-  }
+  },
+  user?: { _id: string }
 ) {
   const mongo = new Mongo()
-  await mongo.delete('micro-saas', { user: user._id, slug: body.slug })
+  if (user !== undefined) {
+    return await mongo.delete('micro-saas', { user: user._id, slug: body.slug })
+  }
+  return await mongo.delete('micro-saas', { slug: body.slug })
 }
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
@@ -25,15 +28,18 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     const token = authorization.split(' ')[1]
     validateBody(body)
     const adminUser = await ServerUtils.getAdminUser(token)
-    const urlUser = await ServerUtils.getURLUser(body.username)
-    if (urlUser === undefined) {
-      throw new ErrorManager('Username does not exist', 403)
+    let urlUser
+    if (body.isPublic !== true) {
+      urlUser = await ServerUtils.getURLUser(body.username)
+      if (urlUser === undefined) {
+        throw new ErrorManager('Username does not exist', 403)
+      }
     }
-    const slugExists = await ServerUtils.checkForSlug(adminUser, urlUser, body)
+    const slugExists = await ServerUtils.checkForSlug(adminUser, body, urlUser)
     if (!slugExists) {
-      throw new ErrorManager('Slug does not exists for user', 421)
+      throw new ErrorManager('Slug does not exists for body!', 421)
     }
-    await removeRow(urlUser, body)
+    await removeRow(body, urlUser)
     res.status(200)
     return res.json({ text: 'URL removed for username!' })
   } catch (error) {

@@ -11,7 +11,7 @@ export default function SignIn() {
   async function handleSubmit(event) {
     event.preventDefault()
     try {
-      await axios.post('/api/checkUser', { email })
+      await axios.post('/api/user/checkUser', { email })
       signIn('email', { email })
       setShowAlert(true)
       setShowErrorAlet(false)

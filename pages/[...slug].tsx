@@ -6,10 +6,12 @@ import SaasList from '../services/SaasList'
 import { useRouter } from 'next/router'
 import LogEvent from '../services/LogEvent'
 import styles from '../styles/slug.module.scss'
+import { YMInitializer } from 'react-yandex-metrika'
 
 function Dashboard() {
   const router = useRouter()
   const [currentURL, setURL] = useState('')
+  const [currentTitle, setTitle] = useState('LooselyHub')
   const [open, setOpen] = useState(false)
   const [saasList, setSaasList] = useState<SaasList>(new SaasList())
 
@@ -17,6 +19,7 @@ function Dashboard() {
     const saasListObj = new SaasList()
     await saasListObj.fetchList()
     setURL(saasListObj.getURLForSlug(router.asPath))
+    setTitle(saasListObj.getTitleForSlug(router.asPath))
     setSaasList(saasListObj)
   }
 
@@ -34,6 +37,7 @@ function Dashboard() {
       const eventLogger = new LogEvent()
       eventLogger.pageView(router.asPath)
     }
+    setTitle(saasList.getTitleForSlug(router.asPath))
     setURL(url)
   }, [router, saasList])
 
@@ -110,7 +114,12 @@ function Dashboard() {
 
   return (
     <div>
+      <YMInitializer
+        accounts={[Number(process.env.YANDEX)]}
+        options={{ webvisor: true }}
+      />
       <Head>
+        <title>{currentTitle}</title>
         <link
           rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
