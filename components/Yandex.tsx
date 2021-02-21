@@ -13,20 +13,24 @@ export default function Yandex() {
   });`
   const url = `https://mc.yandex.ru/watch/${process.env.YANDEX}`
 
-  return [
-    <script
-      key="script_yandex"
-      dangerouslySetInnerHTML={{ __html: scriptText }}
-      crossOrigin="anonymous"
-    />,
-    <noscript key="script_yandex2">
-      <div>
-        <img
-          src={url}
-          style={{ position: 'absolute', left: '-9999px' }}
-          alt=""
-        />
-      </div>
-    </noscript>,
-  ]
+  return (
+    <>
+      <script
+        key="script_yandex"
+        dangerouslySetInnerHTML={{ __html: scriptText }}
+        crossOrigin="anonymous"
+      />
+      ,
+      <noscript key="script_yandex2">
+        <div>
+          <img
+            src={url}
+            style={{ position: 'absolute', left: '-9999px' }}
+            alt=""
+          />
+        </div>
+      </noscript>
+      ,
+    </>
+  )
 }
