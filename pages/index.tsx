@@ -4,7 +4,7 @@ import Login from '../components/login'
 import { useSession } from 'next-auth/client'
 import { useRouter } from 'next/router'
 import Loading from '../components/Loading'
-import { YMInitializer } from 'react-yandex-metrika'
+import Yandex from '../components/Yandex'
 
 function Index() {
   const [session, loading] = useSession()
@@ -17,16 +17,13 @@ function Index() {
 
   return (
     <div>
-      <YMInitializer
-        accounts={[Number(process.env.YANDEX)]}
-        options={{ webvisor: true }}
-      />
       <Head>
         <title>Sign In</title>
         <link
           rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
         />
+        <Yandex />
       </Head>
       <Loading active={loading} />
       {!loading && !session ? <Login /> : <div />}

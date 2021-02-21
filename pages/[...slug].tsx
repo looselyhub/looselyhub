@@ -6,7 +6,7 @@ import SaasList from '../services/SaasList'
 import { useRouter } from 'next/router'
 import LogEvent from '../services/LogEvent'
 import styles from '../styles/slug.module.scss'
-import { YMInitializer } from 'react-yandex-metrika'
+import Yandex from '../components/Yandex'
 
 function Dashboard() {
   const router = useRouter()
@@ -114,16 +114,13 @@ function Dashboard() {
 
   return (
     <div>
-      <YMInitializer
-        accounts={[Number(process.env.YANDEX)]}
-        options={{ webvisor: true }}
-      />
       <Head>
         <title>{currentTitle}</title>
         <link
           rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
         />
+        <Yandex />
       </Head>
       {appBar()}
       {drawer()}

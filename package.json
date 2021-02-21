@@ -34,7 +34,6 @@
     "next-session": "^3.4.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-yandex-metrika": "^2.6.0",
     "sass": "^1.32.7"
   },
   "devDependencies": {
