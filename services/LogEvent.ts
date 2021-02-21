@@ -4,7 +4,7 @@ class LogEvent {
   private path: string
 
   constructor() {
-    this.path = '/api/logEvent'
+    this.path = '/api/event/log'
   }
 
   async logEvent(eventName: string, extra: object) {

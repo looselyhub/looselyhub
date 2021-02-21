@@ -7,6 +7,7 @@ import { useRouter } from 'next/router'
 import LogEvent from '../services/LogEvent'
 import styles from '../styles/slug.module.scss'
 import Yandex from '../components/Yandex'
+import GA from '../components/GA'
 
 function Dashboard() {
   const router = useRouter()
@@ -37,8 +38,8 @@ function Dashboard() {
       const eventLogger = new LogEvent()
       eventLogger.pageView(router.asPath)
     }
-    setTitle(saasList.getTitleForSlug(router.asPath))
     setURL(url)
+    setTitle(saasList.getTitleForSlug(router.asPath))
   }, [router, saasList])
 
   function changeMenu() {
@@ -101,7 +102,7 @@ function Dashboard() {
             <a
               onClick={() => {
                 setOpen(false)
-                router.push(page.slug)
+                router.push(`/${page.slug}`)
               }}
             >
               {page.title}
@@ -120,8 +121,9 @@ function Dashboard() {
           rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
         />
-        <Yandex />
+        <GA />
       </Head>
+      <Yandex />
       {appBar()}
       {drawer()}
       <Saas url={currentURL} />

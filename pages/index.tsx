@@ -5,6 +5,7 @@ import { useSession } from 'next-auth/client'
 import { useRouter } from 'next/router'
 import Loading from '../components/Loading'
 import Yandex from '../components/Yandex'
+import GA from '../components/GA'
 
 function Index() {
   const [session, loading] = useSession()
@@ -23,8 +24,9 @@ function Index() {
           rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
         />
-        <Yandex />
+        <GA />
       </Head>
+      <Yandex />
       <Loading active={loading} />
       {!loading && !session ? <Login /> : <div />}
     </div>
