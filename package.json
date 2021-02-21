@@ -32,6 +32,8 @@
     "next": "9.4",
     "next-auth": "^3.1.0",
     "next-session": "^3.4.0",
+    "pusher": "^5.0.0",
+    "pusher-js": "^7.0.3",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "sass": "^1.32.7"

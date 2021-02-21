@@ -21,6 +21,7 @@ class SaasList {
 
   async fetchList() {
     const response = await axios.get('/api/user/urls')
+    this._list = {}
     response.data.forEach((element: SaasObject) => {
       if (element.isHome) {
         this._home = element

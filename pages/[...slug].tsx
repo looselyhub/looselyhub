@@ -8,9 +8,15 @@ import LogEvent from '../services/LogEvent'
 import styles from '../styles/slug.module.scss'
 import Yandex from '../components/Yandex'
 import GA from '../components/GA'
+import Pusher from 'pusher-js'
+
+const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER, {
+  cluster: 'us2',
+})
 
 function Dashboard() {
   const router = useRouter()
+  const [reloading, setReloading] = useState(false)
   const [currentURL, setURL] = useState('')
   const [currentTitle, setTitle] = useState('LooselyHub')
   const [open, setOpen] = useState(false)
@@ -19,8 +25,7 @@ function Dashboard() {
   async function fetchSaasList() {
     const saasListObj = new SaasList()
     await saasListObj.fetchList()
-    setURL(saasListObj.getURLForSlug(router.asPath))
-    setTitle(saasListObj.getTitleForSlug(router.asPath))
+    setReloading(false)
     setSaasList(saasListObj)
   }
 
@@ -29,6 +34,13 @@ function Dashboard() {
     window.addEventListener('beforeunload', () => {
       const eventLogger = new LogEvent()
       eventLogger.close()
+    })
+    const channel = pusher.subscribe('saas-change')
+    channel.bind('saas-change', function () {
+      if (reloading === false) {
+        setReloading(true)
+        fetchSaasList()
+      }
     })
   }, [])
 
@@ -83,7 +95,7 @@ function Dashboard() {
         <a
           onClick={() => {
             setOpen(false)
-            router.push('home')
+            router.push('/home')
           }}
         >
           HOME
@@ -116,6 +128,7 @@ function Dashboard() {
   return (
     <div>
       <Head>
+        <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
         <title>{currentTitle}</title>
         <link
           rel="stylesheet"
