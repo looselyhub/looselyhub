@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { getSession } from 'next-auth/client'
 import { ObjectID } from 'mongodb'
-import Mongo from '../../../services/Mongo'
-import ServerUtils from '../../../services/ServerUtils'
+import Mongo from 'services/Mongo'
+import ServerUtils from 'services/ServerUtils'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSession({ req })
@@ -23,6 +23,12 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       user: new ObjectID(session.user.id),
     })
     result = result.concat(response)
+    result = result.map((microSaas) => {
+      if (microSaas.showMenu === undefined) {
+        microSaas.showMenu = true
+      }
+      return microSaas
+    })
     return res.json(result)
   } else {
     // Not Signed in

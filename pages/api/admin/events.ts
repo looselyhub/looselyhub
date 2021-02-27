@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import ErrorManager from '../../../services/ErrorManager'
-import ServerUtils from '../../../services/ServerUtils'
-import Mongo from '../../../services/Mongo'
+import ErrorManager from 'services/ErrorManager'
+import ServerUtils from 'services/ServerUtils'
+import Mongo from 'services/Mongo'
 
 async function getEvents(admin: { _id }) {
   const mongo = new Mongo()

@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import Head from 'next/head'
-import PrivateRoute from '../components/PrivateRoute'
-import Saas from '../components/Saas'
-import SaasList from '../services/SaasList'
+import PrivateRoute from 'components/PrivateRoute'
+import Saas from 'components/Saas'
+import SaasList from 'services/SaasList'
 import { useRouter } from 'next/router'
-import LogEvent from '../services/LogEvent'
-import styles from '../styles/slug.module.scss'
-import Yandex from '../components/Yandex'
-import GA from '../components/GA'
+import LogEvent from 'services/LogEvent'
+import Yandex from 'components/Yandex'
+import GA from 'components/GA'
 import Pusher from 'pusher-js'
+import styles from 'styles/slug.module.scss'
 
 const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER, {
   cluster: 'us2',
@@ -137,7 +137,7 @@ function Dashboard() {
         <GA />
       </Head>
       <Yandex />
-      {appBar()}
+      {saasList.getShowMenu(router.asPath) ? appBar() : <div />}
       {drawer()}
       <Saas url={currentURL} />
       <style global jsx>{`

@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import ErrorManager from '../../../services/ErrorManager'
-import Mongo from '../../../services/Mongo'
-import ServerUtils from '../../../services/ServerUtils'
+import ErrorManager from 'services/ErrorManager'
+import Mongo from 'services/Mongo'
+import ServerUtils from 'services/ServerUtils'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {

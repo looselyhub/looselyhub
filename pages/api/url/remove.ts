@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import ErrorManager from '../../../services/ErrorManager'
-import ServerUtils from '../../../services/ServerUtils'
-import Mongo from '../../../services/Mongo'
+import ErrorManager from 'services/ErrorManager'
+import ServerUtils from 'services/ServerUtils'
+import Mongo from 'services/Mongo'
 import Pusher from 'pusher'
 
 const pusher = new Pusher({
@@ -13,7 +13,9 @@ const pusher = new Pusher({
 })
 
 function validateBody(body: any) {
-  ServerUtils.checkString('username', body.username)
+  if (body.isPublic !== true) {
+    ServerUtils.checkString('username', body.username)
+  }
   ServerUtils.checkString('slug', body.slug)
 }
 

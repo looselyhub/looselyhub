@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import ErrorManager from '../../../services/ErrorManager'
-import ServerUtils from '../../../services/ServerUtils'
-import Mongo from '../../../services/Mongo'
+import ErrorManager from 'services/ErrorManager'
+import ServerUtils from 'services/ServerUtils'
+import Mongo from 'services/Mongo'
 import Pusher from 'pusher'
 
 const pusher = new Pusher({
@@ -48,17 +48,22 @@ async function addRow(
     title: string
     url: string
     isHome: boolean
+    showMenu?: boolean
     slug: string
   },
   user?: { _id: string }
 ) {
   const mongo = new Mongo()
+  if (body.showMenu === undefined) {
+    body.showMenu = true
+  }
   const requestBody: any = {
     title: body.title,
     url: body.url,
     isHome: body.isHome,
     slug: body.slug,
     owner: adminUser._id,
+    showMenu: body.showMenu,
   }
   if (user) {
     requestBody.user = user._id

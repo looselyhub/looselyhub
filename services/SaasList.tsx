@@ -7,6 +7,7 @@ interface SaasObject {
   user: string
   slug: string
   isHome: boolean
+  showMenu?: boolean
 }
 
 class SaasList {
@@ -54,6 +55,16 @@ class SaasList {
       return this._list[slug].title
     }
     return ''
+  }
+
+  getShowMenu(path: string) {
+    const slug = path.replace('/', '')
+    if (slug === 'home' && this._home) {
+      return this._home.showMenu
+    } else if (Object.keys(this._list).length > 0 && this._list[slug]) {
+      return this._list[slug].showMenu
+    }
+    return false
   }
 
   getHome() {
