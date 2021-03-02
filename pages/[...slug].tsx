@@ -31,10 +31,10 @@ function Dashboard() {
 
   useEffect(() => {
     fetchSaasList()
-    window.addEventListener('beforeunload', () => {
-      const eventLogger = new LogEvent()
-      eventLogger.close()
-    })
+    // window.addEventListener('beforeunload', (e) => {
+    //   const eventLogger = new LogEvent()
+    //   eventLogger.close()
+    // })
     const channel = pusher.subscribe('saas-change')
     channel.bind('saas-change', function () {
       if (reloading === false) {

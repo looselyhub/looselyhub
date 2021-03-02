@@ -5,6 +5,7 @@ import ErrorManager from 'services/ErrorManager'
 import Mongo from 'services/Mongo'
 import { getSession } from 'next-auth/client'
 import { ObjectID } from 'mongodb'
+import Webhooks from 'services/Webhooks'
 
 async function addRow(
   user: {
@@ -27,6 +28,8 @@ async function addRow(
     username: user.username,
   }
   await mongo.insert('events', requestBody)
+  const webhooks = new Webhooks()
+  webhooks.trigger(requestBody)
 }
 
 async function getUser(id: string) {
