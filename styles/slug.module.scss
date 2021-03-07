@@ -1,89 +1,109 @@
+.mainDiv {
+  display: flex;
+}
+
 .sidebar {
   margin: 0;
+  flex: 0 0 100%;
   padding: 0;
-  width: 240px;
+  max-width: 240px;
   background-color: #f5f6fa;
-  position: fixed;
   height: 100%;
-  overflow: auto;
   .home {
     font-size: 28px;
-  }
-  a {
     font-weight: 500;
     cursor: pointer;
-    display: block;
     color: #ef767a;
     padding: 16px;
     text-decoration: none;
   }
-  a.active {
-    background-color: #ffe347;
-    color: white;
-  }
-  a:hover:not(.active) {
-    background-color: #ffe347;
-    color: #ef767a;
-  }
+}
+
+.sidebarClosed {
+  @extend .sidebar;
+  max-width: 70px;
+}
+
+.sidebarHeader {
+  width: 100%;
+  height: 52px;
+  display: flex;
+  background-color: #ef767a;
+  align-items: center;
+  justify-content: left;
 }
 
 .hamburguer {
-  opacity: 85%;
-  position: absolute;
-  padding: 4px;
-  background-color: #f5f6fa;
-  left: 24px;
-  top: 24px;
-  display: inline-block;
+  margin: auto;
+  padding-left: 13px;
+  height: 28px;
+  width: 28px;
+  display: inline;
   cursor: pointer;
-  .bar1,
-  .bar2,
-  .bar3 {
-    width: 35px;
-    height: 5px;
-    background-color: #ef767a;
-    margin: 6px 0;
-    transition: 0.4s;
-  }
 }
 
-.hamburguer_change {
+.hamburguerClosed {
   @extend .hamburguer;
-  display: 'none';
-  .bar1 {
-    -webkit-transform: rotate(-45deg) translate(-9px, 6px);
-    transform: rotate(-45deg) translate(-9px, 6px);
-  }
-  .bar2 {
-    opacity: 0;
-  }
-  .bar3 {
-    -webkit-transform: rotate(45deg) translate(-8px, -8px);
-    transform: rotate(45deg) translate(-8px, -8px);
-  }
+  padding-left: 0px;
 }
 
 .logo {
-  cursor: pointer;
+  margin-left: 12px;
+  margin-right: 12px;
+  flex: 1;
   width: 100%;
-  img {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    width: 200px;
-    padding: 8px;
-  }
+  height: 36px;
+  display: inline;
+  padding: 8px;
+  max-width: 200px;
+  cursor: pointer;
+}
+
+.logoClosed {
+  @extend .logo;
+  display: none;
+}
+
+.list {
+  width: 100%;
+  height: 100%;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  overflow: auto;
 }
 
 @media screen and (max-width: 780px) {
+  .mainDiv {
+    flex-direction: column;
+  }
+  .sidebarHeader {
+    display: absolute;
+  }
+  .hamburguer {
+    margin: 0px;
+  }
+  .hamburguerClosed {
+    padding-left: 13px;
+  }
+  .logoClosed {
+    display: block;
+  }
   .sidebar {
-    display: grid;
-    width: 100%;
-    height: 100%;
-    height: auto;
-    position: relative;
+    //TODO: Fix Vertical scroll
+    overflow: auto;
+    max-width: 100%;
+    max-height: 100%;
     a {
       float: left;
+      height: 32px;
     }
+  }
+  .sidebarClosed {
+    @extend .sidebar;
+    max-height: 54px;
+  }
+  .list {
+    display: table-row;
   }
 }

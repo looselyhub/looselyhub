@@ -28,6 +28,7 @@
   "dependencies": {
     "axios": "^0.21.1",
     "bcrypt": "^5.0.0",
+    "css.gg": "^2.0.0",
     "mongodb": "^3.6.3",
     "next": "9.4",
     "next-auth": "^3.1.0",

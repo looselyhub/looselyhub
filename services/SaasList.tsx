@@ -26,6 +26,7 @@ class SaasList {
     response.data.forEach((element: SaasObject) => {
       if (element.isHome) {
         this._home = element
+        this._home.title = 'HOME'
       } else {
         this._list[element.slug] = element
       }
@@ -33,6 +34,7 @@ class SaasList {
     if (this._home === undefined) {
       const keys = Object.keys(this._list)
       this._home = this._list[keys[keys.length - 1]]
+      this._home.title = 'HOME'
       delete this._list[keys[keys.length - 1]]
     }
   }

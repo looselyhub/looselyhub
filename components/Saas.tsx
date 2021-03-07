@@ -7,7 +7,7 @@ export default function Saas({ url }) {
     setLoading(true)
   }, [url])
   return (
-    <div style={{ height: '100%' }}>
+    <div style={{ height: '100%', flex: 1 }}>
       <Loading active={loading} />
       <iframe
         style={{

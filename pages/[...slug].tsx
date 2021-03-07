@@ -7,8 +7,9 @@ import { useRouter } from 'next/router'
 import LogEvent from 'services/LogEvent'
 import Yandex from 'components/Yandex'
 import GA from 'components/GA'
+import SaasRow from 'components/SaasRow'
 import Pusher from 'pusher-js'
-import styles from 'styles/slug.module.scss'
+import styles from '../styles/slug.module.scss'
 
 const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER, {
   cluster: 'us2',
@@ -31,10 +32,6 @@ function Dashboard() {
 
   useEffect(() => {
     fetchSaasList()
-    // window.addEventListener('beforeunload', (e) => {
-    //   const eventLogger = new LogEvent()
-    //   eventLogger.close()
-    // })
     const channel = pusher.subscribe('saas-change')
     channel.bind('saas-change', function () {
       if (reloading === false) {
@@ -54,79 +51,80 @@ function Dashboard() {
     setTitle(saasList.getTitleForSlug(router.asPath))
   }, [router, saasList])
 
-  function changeMenu() {
-    setOpen(!open)
-  }
-
-  function appBar() {
-    return (
-      <div
-        className={open ? styles.hamburguer_change : styles.hamburguer}
-        onClick={() => changeMenu()}
-      >
-        <div className={styles.bar1} />
-        <div className={styles.bar2} />
-        <div className={styles.bar3} />
-      </div>
-    )
-  }
-
-  function openStyle(openStatus: boolean) {
-    if (openStatus) return {}
-    return { display: 'none' }
-  }
+  // DONE: Remake side bar
+  // DONE: Remake side bar pc
+  // DONE: Remake side bar closed pc
+  // TODO: Remake side bar mobile
 
   function redirectToLooselyHub() {
     window.location.href = 'http://www.google.com.br'
   }
 
+  function sideBarOpenStyle() {
+    if (!open) {
+      return styles.hamburguerClosed
+    }
+    return styles.hamburguer
+  }
+
+  function styleLogo() {
+    if (!open) {
+      return styles.logoClosed
+    }
+    return styles.logo
+  }
+
   function renderLogo() {
     return (
-      <div className={styles.logo}>
-        <img src="/logo.png" onClick={() => redirectToLooselyHub()} />
+      <div className={styles.sidebarHeader}>
+        <img
+          className={sideBarOpenStyle()}
+          src="/hamburguer.png"
+          onClick={() => setOpen(!open)}
+        />
+        <img
+          className={styleLogo()}
+          src="/logo.png"
+          onClick={() => redirectToLooselyHub()}
+        />
       </div>
     )
   }
 
   function renderHome() {
     if (saasList.getHome() === undefined) return <div />
-    return (
-      <div key={'HOME'} className={styles.home}>
-        <a
-          onClick={() => {
-            setOpen(false)
-            router.push('/home')
-          }}
-        >
-          HOME
-        </a>
-      </div>
-    )
+    return <SaasRow open={open} page={saasList.getHome()} update={updatePage} />
+  }
+
+  function updatePage(page) {
+    router.push(`/${page.slug}`)
+  }
+
+  function openStyle() {
+    if (!open) {
+      return styles.sidebarClosed
+    }
+    return styles.sidebar
   }
 
   function drawer() {
     return (
-      <div className={styles.sidebar} style={openStyle(open)}>
+      <div className={openStyle()}>
         {renderLogo()}
-        {renderHome()}
-        {saasList.getList().map((page) => (
-          <div key={page.title}>
-            <a
-              onClick={() => {
-                setOpen(false)
-                router.push(`/${page.slug}`)
-              }}
-            >
-              {page.title}
-            </a>
-          </div>
-        ))}
+        <ul className={styles.list}>
+          <li>{renderHome()}</li>
+          {saasList.getList().map((page) => (
+            <li key={page.slug}>
+              <SaasRow open={open} page={page} update={updatePage} />
+            </li>
+          ))}
+        </ul>
       </div>
     )
   }
 
   return (
-    <div>
+    <div className={styles.mainDiv}>
       <Head>
         <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
         <title>{currentTitle}</title>
@@ -137,7 +135,6 @@ function Dashboard() {
         <GA />
       </Head>
       <Yandex />
-      {saasList.getShowMenu(router.asPath) ? appBar() : <div />}
       {drawer()}
       <Saas url={currentURL} />
       <style global jsx>{`
