@@ -21,6 +21,9 @@ export default function SaasRow({ open, page, update }) {
   }
 
   function getIcon() {
+    if (page.icon) {
+      return <span className="material-icons">{page.icon}</span>
+    }
     return <p>{getAcronym(page.title)}</p>
   }
 

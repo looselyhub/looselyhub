@@ -50,6 +50,7 @@ async function addRow(
     isHome: boolean
     showMenu?: boolean
     slug: string
+    icon?: string
   },
   user?: { _id: string }
 ) {
@@ -64,6 +65,7 @@ async function addRow(
     slug: body.slug,
     owner: adminUser._id,
     showMenu: body.showMenu,
+    icon: body.icon,
   }
   if (user) {
     requestBody.user = user._id

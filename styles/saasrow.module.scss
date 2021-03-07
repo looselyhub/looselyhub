@@ -10,11 +10,18 @@
 .iconContainer {
   width: 36px;
   height: 36px;
-  border: 3px solid #FCE347;
+  border: 3px solid #fce347;
   p {
     margin: 10px 0;
     text-align: center;
-    color: black;
+    color: rgb(49, 49, 49);
+    height: 100%;
+    width: 100%;
+  }
+  span {
+    margin: 6px 0;
+    text-align: center;
+    color: rgb(49, 49, 49);
     height: 100%;
     width: 100%;
   }
