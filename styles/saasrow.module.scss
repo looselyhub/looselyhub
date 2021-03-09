@@ -33,6 +33,11 @@
 }
 
 .title {
+  text-overflow: ellipsis;
+  word-wrap: break-word;
+  overflow: hidden;
   margin: 12px 8px 0px 8px;
-  display: inline;
+  display: inline-block;
+  max-height: 1.6em;
+  line-height: 1.6em;
 }

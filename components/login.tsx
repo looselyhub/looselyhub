@@ -42,11 +42,13 @@ export default function SignIn() {
       <div className={styles.row}>
         <img src={'/logo.png'} />
         <h2>Sign In</h2>
-        <input
-          placeholder="Your E-Mail Address"
-          onChange={(event) => setEmail(event.target.value)}
-        />
-        <button onClick={handleSubmit}>Sign In</button>
+        <form onSubmit={handleSubmit}>
+          <input
+            placeholder="Your E-Mail Address"
+            onChange={(event) => setEmail(event.target.value.trim())}
+          />
+          <button type="submit">Sign In</button>
+        </form>
         {showAlertContainer()}
         <p>Copyright © Losselyhub 2021.</p>
       </div>

@@ -51,13 +51,8 @@ function Dashboard() {
     setTitle(saasList.getTitleForSlug(router.asPath))
   }, [router, saasList])
 
-  // DONE: Remake side bar
-  // DONE: Remake side bar pc
-  // DONE: Remake side bar closed pc
-  // TODO: Remake side bar mobile
-
   function redirectToLooselyHub() {
-    window.location.href = 'http://www.google.com.br'
+    window.location.href = 'http://www.looselyhub.com/?ref=demo'
   }
 
   function sideBarOpenStyle() {

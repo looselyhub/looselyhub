@@ -9,6 +9,7 @@
   max-width: 240px;
   background-color: #f5f6fa;
   height: 100%;
+  transition: max-width 0.3s, max-height 0.3s;
   .home {
     font-size: 28px;
     font-weight: 500;
