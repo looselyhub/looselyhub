@@ -55,6 +55,15 @@ class ServerUtils {
       throw new ErrorManager(`Invalid {${key}}. {${key}} must be string!`, 402)
     }
   }
+
+  static checkArray(key: string, value: any) {
+    if (value === undefined || typeof value !== 'object') {
+      throw new ErrorManager(
+        `Invalid {${key}}. {${key}} must be an object!`,
+        402
+      )
+    }
+  }
 }
 
 export default ServerUtils
