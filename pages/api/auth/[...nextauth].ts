@@ -44,6 +44,10 @@ const options = {
       return Promise.resolve(session)
     },
   },
+  pages: {
+    signIn: '/',
+    newUser: null,
+  },
   database: process.env.DATABASE_URL,
 }
 
