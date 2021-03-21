@@ -61,7 +61,7 @@ async function getListData(body: any) {
 }
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  const { id } = req.body
+  const { id } = req.query
   try {
     const mongo = new Mongo()
     const queryResponse = await mongo.query('list_view', {
