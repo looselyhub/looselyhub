@@ -49,6 +49,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       return res.json({ error: error.message })
     }
     res.status(402)
-    return res.json({ error: 'Something went wrong!' })
+    return res.json({ error: error.stack })
   }
 }
