@@ -5,14 +5,25 @@ import Table from 'components/List/Table'
 
 export default function List() {
   const router = useRouter()
+  const [startLoading, setStartLoading] = useState<boolean>(false)
+  const [color, setColor] = useState<string>(undefined)
   const [data, setData] = useState<Array<any>>([])
+  const [loading, setLoading] = useState(true)
 
   async function fetchData(id: string) {
+    const responseColor = await axios.get('/api/list/fetchColor', {
+      params: {
+        id,
+      },
+    })
+    setColor(responseColor.data)
+    setStartLoading(true)
     const response = await axios.get('/api/list/fetch', {
       params: {
         id,
       },
     })
+    setLoading(false)
     setData(response.data)
   }
 
@@ -27,7 +38,11 @@ export default function List() {
 
   return (
     <div>
-      <Table data={data} />
+      {startLoading ? (
+        <Table loading={loading} color={color} data={data} />
+      ) : (
+        <div />
+      )}
     </div>
   )
 }
