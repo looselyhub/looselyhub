@@ -3,6 +3,7 @@ import ErrorManager from 'services/ErrorManager'
 import { ObjectID } from 'mongodb'
 import Mongo from 'services/Mongo'
 import axios from 'axios'
+import Moment from 'moment'
 
 function getField(data: any, field: string) {
   if (field === null || field === undefined) {
@@ -31,6 +32,20 @@ function parseObjectArray(data: any, parser: any) {
   return result
 }
 
+function parseDateString(data: any, parser: any) {
+  const result = {
+    value: '',
+    name: parser.name,
+    type: 'text',
+  }
+  const baseValue = getField(data, parser.field)
+  const readFormat = parser.readFormat
+  const showFormat = parser.showFormat
+  const date = Moment(baseValue, readFormat)
+  result.value = date.format(showFormat)
+  return result
+}
+
 function buildColumn(data: any, parser: any) {
   const result = {
     value: '',
@@ -40,6 +55,8 @@ function buildColumn(data: any, parser: any) {
   switch (parser.type) {
     case 'object_array':
       return parseObjectArray(data, parser)
+    case 'dateString':
+      return parseDateString(data, parser)
     default:
       result.value = getField(data, parser.field)
       result.type = parser.type
