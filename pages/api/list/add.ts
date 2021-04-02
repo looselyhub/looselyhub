@@ -9,6 +9,7 @@ async function addRow(
     url: string
     listLocation: string
     parser: any
+    color?: string
   }
 ) {
   const mongo = new Mongo()
@@ -16,6 +17,9 @@ async function addRow(
     url: body.url,
     listLocation: body.listLocation,
     parser: body.parser,
+  }
+  if (body.color) {
+    requestBody.color = body.color
   }
   return await mongo.insert('list_view', requestBody)
 }
