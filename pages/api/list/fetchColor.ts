@@ -10,8 +10,12 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     const queryResponse = await mongo.query('list_view', {
       _id: new ObjectID(id),
     })
+    let color = queryResponse[0].color
+    if (queryResponse[0].color === undefined) {
+      color = '#ef767a'
+    }
     res.statusCode = 200
-    return res.json(queryResponse[0].color)
+    return res.json(color)
   } catch (error) {
     if (error instanceof ErrorManager) {
       res.status(error.code)

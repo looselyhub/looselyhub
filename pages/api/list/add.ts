@@ -7,7 +7,7 @@ async function addRow(
   adminUser: { _id: string },
   body: {
     url: string
-    listLocation: string
+    listLocation?: string
     parser: any
     color?: string
   }
@@ -15,8 +15,11 @@ async function addRow(
   const mongo = new Mongo()
   const requestBody: any = {
     url: body.url,
-    listLocation: body.listLocation,
+
     parser: body.parser,
+  }
+  if (body.listLocation) {
+    requestBody.listLocation = body.listLocation
   }
   if (body.color) {
     requestBody.color = body.color
