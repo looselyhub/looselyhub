@@ -8,6 +8,7 @@ import {
 import Head from 'next/head'
 import Styles from './Table.module.scss'
 import Loading from '../Loading'
+import { CSVLink } from 'react-csv'
 import 'regenerator-runtime/runtime'
 
 function GlobalFilter({
@@ -43,6 +44,19 @@ const primaryColor = process.env.NEXT_PUBLIC_PRIMARY_COLOR
 export default function Table({ loading, data, color = primaryColor }) {
   const newRows = React.useMemo(() => createRows(), [data])
   const newHeader = React.useMemo(() => createHeader(), [data])
+
+  function generateCSVData() {
+    const result = data.map((row) => {
+      const rowObj = {}
+      row.forEach((column) => {
+        rowObj[column.name] = column.value
+      })
+      return rowObj
+    })
+    return result
+  }
+
+  const csvData = generateCSVData()
 
   function createHeader() {
     if (data.length === 0) {
@@ -187,6 +201,9 @@ export default function Table({ loading, data, color = primaryColor }) {
                 style={{ width: '100px' }}
               />
             </span>
+            <CSVLink className={Styles.donwloadCSV} data={csvData}>
+              Donwload CSV
+            </CSVLink>
           </div>
         </td>
       </tr>

@@ -42,6 +42,7 @@
     "pusher": "^5.0.0",
     "pusher-js": "^7.0.3",
     "react": "^16.13.1",
+    "react-csv": "^2.0.3",
     "react-dom": "^16.13.1",
     "react-responsive-carousel": "^3.2.15",
     "react-table": "^7.6.3",
