@@ -12,7 +12,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     })
     let color = queryResponse[0].color
     if (queryResponse[0].color === undefined) {
-      color = '#ef767a'
+      color = process.env.NEXT_PLUBIC_PRIMARY_COLOR
+        ? process.env.NEXT_PUBLIC_PRIMARY_COLOR
+        : '#ef767a'
     }
     res.statusCode = 200
     return res.json(color)

@@ -16,6 +16,12 @@ const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER, {
 })
 
 function Dashboard() {
+  const primaryColor = process.env.NEXT_PUBLIC_PRIMARY_COLOR
+    ? process.env.NEXT_PUBLIC_PRIMARY_COLOR
+    : '#EF767A'
+  const secondaryColor = process.env.NEXT_PUBLIC_SECONDARY_COLOR
+    ? process.env.NEXT_PUBLIC_SECONDARY_COLOR
+    : '#FCE247'
   const router = useRouter()
   const [reloading, setReloading] = useState(false)
   const [currentURL, setURL] = useState('')
@@ -71,15 +77,23 @@ function Dashboard() {
 
   function renderLogo() {
     return (
-      <div className={styles.sidebarHeader}>
-        <img
-          className={sideBarOpenStyle()}
-          src="/hamburguer.png"
-          onClick={() => setOpen(!open)}
-        />
+      <div
+        className={styles.sidebarHeader}
+        style={{ backgroundColor: primaryColor }}
+      >
+        <div className={sideBarOpenStyle()} onClick={() => setOpen(!open)}>
+          <div style={{ backgroundColor: secondaryColor }}></div>
+          <div style={{ backgroundColor: secondaryColor }}></div>
+          <div style={{ backgroundColor: secondaryColor }}></div>
+        </div>
+
         <img
           className={styleLogo()}
-          src="/logo.png"
+          src={
+            process.env.NEXT_PUBLIC_LOGO
+              ? process.env.NEXT_PUBLIC_LOGO
+              : '/logo.png'
+          }
           onClick={() => redirectToLooselyHub()}
         />
       </div>
@@ -117,10 +131,13 @@ function Dashboard() {
       </div>
     )
   }
-
+  const favicon = process.env.NEXT_PUBLIC_FAVICON
+    ? process.env.NEXT_PUBLIC_FAVICON
+    : '/favicon.ico'
   return (
     <div className={styles.mainDiv}>
       <Head>
+        <link rel="shortcut icon" href={favicon} />
         <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
         <title>{currentTitle}</title>
         <link

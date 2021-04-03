@@ -36,7 +36,11 @@ function GlobalFilter({
   )
 }
 
-export default function Table({ loading, data, color = '#ef767a' }) {
+const primaryColor = process.env.NEXT_PUBLIC_PRIMARY_COLOR
+  ? process.env.NEXT_PUBLIC_PRIMARY_COLOR
+  : '#EF767A'
+
+export default function Table({ loading, data, color = primaryColor }) {
   const newRows = React.useMemo(() => createRows(), [data])
   const newHeader = React.useMemo(() => createHeader(), [data])
 

@@ -4,6 +4,9 @@ import axios from 'axios'
 import styles from '../styles/login.module.scss'
 
 export default function SignIn() {
+  const primaryColor = process.env.NEXT_PUBLIC_PRIMARY_COLOR
+    ? process.env.NEXT_PUBLIC_PRIMARY_COLOR
+    : '#EF767A'
   const [email, setEmail] = useState('')
   const [showAlert, setShowAlert] = useState(false)
   const [showErrorAlert, setShowErrorAlet] = useState(false)
@@ -40,14 +43,22 @@ export default function SignIn() {
   return (
     <div className={styles.login}>
       <div className={styles.row}>
-        <img src={'/logo.png'} />
+        <img
+          src={
+            process.env.NEXT_PUBLIC_LOGO
+              ? process.env.NEXT_PUBLIC_LOGO
+              : '/logo.png'
+          }
+        />
         <h2>Sign In</h2>
         <form onSubmit={handleSubmit}>
           <input
             placeholder="Your E-Mail Address"
             onChange={(event) => setEmail(event.target.value.trim())}
           />
-          <button type="submit">Sign In</button>
+          <button style={{ backgroundColor: primaryColor }} type="submit">
+            Sign In
+          </button>
         </form>
         {showAlertContainer()}
         <p>Copyright © Losselyhub 2021.</p>

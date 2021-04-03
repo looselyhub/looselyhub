@@ -18,7 +18,7 @@
   align-items: center;
   justify-content: center;
   img {
-    width: 90%;
+    max-width: 400px;
     display: block;
     margin-left: auto;
     margin-right: auto;
@@ -47,7 +47,6 @@
     text-align: center;
     text-decoration: none;
     width: 90%;
-    background-color: #ef767a;
     border: none;
     color: white;
     margin-top: 16px;

@@ -2,6 +2,9 @@ import React from 'react'
 import style from '../styles/saasrow.module.scss'
 
 export default function SaasRow({ open, page, update }) {
+  const primaryColor = process.env.NEXT_PUBLIC_PRIMARY_COLOR
+    ? process.env.NEXT_PUBLIC_PRIMARY_COLOR
+    : '#EF767A'
   function getIconStyle() {
     if (!open) {
       return style.iconContainerClosed
@@ -29,6 +32,7 @@ export default function SaasRow({ open, page, update }) {
 
   return (
     <a
+      style={{ color: primaryColor }}
       className={style.link}
       onClick={() => {
         update(page)

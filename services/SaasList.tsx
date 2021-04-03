@@ -27,7 +27,7 @@ class SaasList {
     response.data.forEach((element: SaasObject) => {
       if (element.isHome) {
         this._home = element
-        this._home.title = 'HOME'
+        this._home.slug = 'home'
       } else {
         this._list[element.slug] = element
       }
@@ -35,7 +35,7 @@ class SaasList {
     if (this._home === undefined) {
       const keys = Object.keys(this._list)
       this._home = this._list[keys[keys.length - 1]]
-      this._home.title = 'HOME'
+      this._home.slug = 'home'
       delete this._list[keys[keys.length - 1]]
     }
   }
@@ -52,9 +52,7 @@ class SaasList {
 
   getTitleForSlug(path: string) {
     const slug = path.replace('/', '')
-    if (slug === 'home' && this._home) {
-      return 'Home'
-    } else if (Object.keys(this._list).length > 0 && this._list[slug]) {
+    if (Object.keys(this._list).length > 0 && this._list[slug]) {
       return this._list[slug].title
     }
     return ''
@@ -62,9 +60,7 @@ class SaasList {
 
   getShowMenu(path: string) {
     const slug = path.replace('/', '')
-    if (slug === 'home' && this._home) {
-      return this._home.showMenu
-    } else if (Object.keys(this._list).length > 0 && this._list[slug]) {
+    if (Object.keys(this._list).length > 0 && this._list[slug]) {
       return this._list[slug].showMenu
     }
     return false

@@ -8,6 +8,9 @@ import Yandex from '../components/Yandex'
 import GA from '../components/GA'
 
 function Index() {
+  const favicon = process.env.NEXT_PUBLIC_FAVICON
+    ? process.env.NEXT_PUBLIC_FAVICON
+    : '/favicon.ico'
   const [session, loading] = useSession()
   const router = useRouter()
   useEffect(() => {
@@ -19,6 +22,7 @@ function Index() {
   return (
     <div>
       <Head>
+        <link rel="shortcut icon" href={favicon} />
         <title>Sign In</title>
         <link
           rel="stylesheet"
