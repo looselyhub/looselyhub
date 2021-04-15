@@ -18,6 +18,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         user: { $exists: false },
       })
       result = result.concat(extraResponse)
+    } else {
+      const extraResponse = await mongo.query('micro-saas', {
+        user: { $exists: false },
+      })
+      result = result.concat(extraResponse)
     }
     const response = await mongo.query('micro-saas', {
       user: new ObjectID(session.user.id),

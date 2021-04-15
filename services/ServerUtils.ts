@@ -13,7 +13,7 @@ class ServerUtils {
 
   static async getURLUser(username: string) {
     const mongo = new Mongo()
-    const response = await mongo.query('users', { username })
+    const response = await mongo.query('users', { email: username })
     if (response.length === 1) {
       return response[0]
     }
