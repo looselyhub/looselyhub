@@ -11,9 +11,9 @@ class ServerUtils {
     throw new ErrorManager('Invalid token', 401)
   }
 
-  static async getURLUser(username: string) {
+  static async getURLUser(email: string) {
     const mongo = new Mongo()
-    const response = await mongo.query('users', { email: username })
+    const response = await mongo.query('users', { email })
     if (response.length === 1) {
       return response[0]
     }
