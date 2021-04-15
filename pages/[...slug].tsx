@@ -25,6 +25,7 @@ function Dashboard() {
   const router = useRouter()
   const [reloading, setReloading] = useState(false)
   const [currentURL, setURL] = useState('')
+  const [gridTemplate, setGridTemplate] = useState(undefined)
   const [currentTitle, setTitle] = useState('LooselyHub')
   const [open, setOpen] = useState(false)
   const [saasList, setSaasList] = useState<SaasList>(new SaasList())
@@ -49,11 +50,13 @@ function Dashboard() {
 
   useEffect(() => {
     const url = saasList.getURLForSlug(router.asPath)
+    const newGridTemplate = saasList.getGridTemplateForSlug(router.asPath)
     if (url !== '') {
       const eventLogger = new LogEvent()
       eventLogger.pageView(router.asPath)
     }
     setURL(url)
+    setGridTemplate(newGridTemplate)
     setTitle(saasList.getTitleForSlug(router.asPath))
   }, [router, saasList])
 
@@ -152,7 +155,7 @@ function Dashboard() {
       </Head>
       <Yandex />
       {drawer()}
-      <Saas url={currentURL} />
+      <Saas url={currentURL} gridTemplate={gridTemplate} />
       <style global jsx>{`
         html,
         body,

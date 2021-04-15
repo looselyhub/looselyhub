@@ -51,6 +51,7 @@ async function addRow(
     showMenu?: boolean
     slug: string
     icon?: string
+    gridTemplate?: string
   },
   user?: { _id: string }
 ) {
@@ -66,6 +67,7 @@ async function addRow(
     owner: adminUser._id,
     showMenu: body.showMenu,
     icon: body.icon,
+    gridTemplate: body.gridTemplate,
   }
   if (user) {
     requestBody.user = user._id

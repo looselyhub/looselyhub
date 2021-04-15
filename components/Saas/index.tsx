@@ -2,13 +2,20 @@ import React, { useState, useEffect } from 'react'
 import Loading from '../Loading'
 import styles from './Saas.module.scss'
 
-export default function Saas({ url }) {
+export default function Saas({ url, gridTemplate }) {
   const [loading, setLoading] = useState(true)
   const isArray = Array.isArray(url)
 
   useEffect(() => {
     setLoading(true)
   }, [url])
+
+  function getStyle() {
+    if (gridTemplate) {
+      return { gridTemplate: gridTemplate }
+    }
+    return {}
+  }
 
   function getGridType() {
     switch (url.length) {
@@ -25,7 +32,10 @@ export default function Saas({ url }) {
     return (
       <div style={{ height: '100%', flex: 1 }}>
         <Loading active={loading} />
-        <div className={`${styles.grid_div} ${getGridType()}`}>
+        <div
+          className={`${styles.grid_div} ${getGridType()}`}
+          style={getStyle()}
+        >
           {url.map((urlString, i) => {
             return (
               <iframe

@@ -9,6 +9,7 @@ interface SaasObject {
   slug: string
   isHome: boolean
   showMenu?: boolean
+  gridTemplate?: string
 }
 
 class SaasList {
@@ -48,6 +49,16 @@ class SaasList {
       return this._list[slug].url
     }
     return ''
+  }
+
+  getGridTemplateForSlug(path: string) {
+    const slug = path.replace('/', '')
+    if (slug === 'home' && this._home) {
+      return this._home.gridTemplate
+    } else if (Object.keys(this._list).length > 0 && this._list[slug]) {
+      return this._list[slug].gridTemplate
+    }
+    return undefined
   }
 
   getTitleForSlug(path: string) {
