@@ -24,7 +24,7 @@ function Dashboard() {
     : '#FCE247'
   const router = useRouter()
   const [reloading, setReloading] = useState(false)
-  const [currentURL, setURL] = useState('')
+  const [currentURL, setURL] = useState<string | string[]>('')
   const [gridTemplate, setGridTemplate] = useState(undefined)
   const [currentTitle, setTitle] = useState('LooselyHub')
   const [open, setOpen] = useState(false)
