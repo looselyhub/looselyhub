@@ -3,7 +3,7 @@ import axios from 'axios'
 interface SaasObject {
   title: string
   icon: string
-  url: string
+  url: string | string[]
   _id: string
   user: string
   slug: string

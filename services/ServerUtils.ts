@@ -56,6 +56,17 @@ class ServerUtils {
     }
   }
 
+  static checkStringArray(key: string, value: any) {
+    if (
+      value === undefined ||
+      (typeof value !== 'string' && !Array.isArray(value))
+    ) {
+      throw new ErrorManager(`Invalid {${key}}. {${key}} must be string!`, 402)
+    }
+  }
+
+  isArray
+
   static checkArray(key: string, value: any) {
     if (value === undefined || typeof value !== 'object') {
       throw new ErrorManager(

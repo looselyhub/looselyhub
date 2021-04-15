@@ -82,7 +82,7 @@ async function addRow(
 
 function validateBody(body: any) {
   ServerUtils.checkString('title', body.title)
-  ServerUtils.checkString('url', body.url)
+  ServerUtils.checkStringArray('url', body.url)
   if (body.isPublic !== true) {
     ServerUtils.checkString('username', body.username)
   }

@@ -1,0 +1,34 @@
+.grid_div {
+  display: grid;
+  height: 100%;
+  iframe {
+    height: 100%;
+    width: 100%;
+  }
+}
+
+.grid_2 {
+  grid-template: 1fr / 1fr 1fr;
+}
+
+.grid_3 {
+  grid-template: 1fr / 1fr 1fr 1fr;
+}
+
+.grid_4 {
+  grid-template: 1fr 1fr / 1fr 1fr;
+}
+
+@media screen and (max-width: 780px) {
+  .grid_2 {
+    grid-template: 1fr 1fr / 1fr;
+  }
+  
+  .grid_3 {
+    grid-template: 1fr 1fr 1fr / 1fr;
+  }
+  
+  .grid_4 {
+    grid-template: 1fr 1fr / 1fr 1fr;
+  }
+}
