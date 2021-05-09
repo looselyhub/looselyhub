@@ -15,7 +15,7 @@ class Mongo {
     this._client = await MongoClient.connect(this._url, {
       useNewUrlParser: true,
     })
-    return this._client.db('looselyhub')
+    return this._client.db()
   }
 
   async query(table: string, query: object) {

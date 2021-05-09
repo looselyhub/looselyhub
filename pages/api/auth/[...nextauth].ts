@@ -37,7 +37,7 @@ const options = {
     },
     jwt: async (token, user) => {
       user && (token.user = user)
-      return Promise.resolve(token) // ...here
+      return Promise.resolve(token)
     },
     session: async (session, user) => {
       session.user = user.user

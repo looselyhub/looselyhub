@@ -29,7 +29,6 @@ function Dashboard() {
   const [currentTitle, setTitle] = useState('LooselyHub')
   const [open, setOpen] = useState(false)
   const [saasList, setSaasList] = useState<SaasList>(new SaasList())
-
   async function fetchSaasList() {
     const saasListObj = new SaasList()
     await saasListObj.fetchList()
