@@ -5,7 +5,7 @@ import Mongo from 'services/Mongo'
 import ServerUtils from 'services/ServerUtils'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  const session = await getSession({ req })
+  const session = await getSession({ req }) as any
   if (session) {
     res.statusCode = 200
     const mongo = new Mongo()
@@ -34,6 +34,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       }
       return microSaas
     })
+    console.log('URLs', result);
     return res.json(result)
   } else {
     // Not Signed in

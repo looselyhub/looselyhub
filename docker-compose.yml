@@ -1,4 +1,4 @@
-version: "3"
+version: '3'
 
 services:
   web:
@@ -9,8 +9,10 @@ services:
     restart: always
     volumes:
       - ./:/usr/src/app
+      - /usr/src/app/node_modules
+      - /usr/src/app/.next
     ports:
-      - "3000:3000"
+      - '3000:3000'
     depends_on:
       - mongo
   mongo:
@@ -20,4 +22,4 @@ services:
     volumes:
       - ./data:/data/db
     ports:
-      - "27017:27017"
+      - '27017:27017'

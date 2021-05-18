@@ -48,7 +48,7 @@ export const LoginLog = async (userId: string) => {
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const { body } = req
-    const session = await getSession({ req })
+    const session = await getSession({ req }) as any
     if (!session) {
       throw new ErrorManager('Invalid session!', 401)
     }

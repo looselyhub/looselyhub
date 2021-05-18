@@ -36,7 +36,7 @@
     "moment": "^2.29.1",
     "mongodb": "^3.6.3",
     "next": "9.4",
-    "next-auth": "^3.1.0",
+    "next-auth": "^3.21.1",
     "next-session": "^3.4.0",
     "next-transpile-modules": "^6.3.0",
     "pusher": "^5.0.0",

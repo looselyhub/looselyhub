@@ -1,4 +1,4 @@
-FROM node:12.18.3
+FROM node:14.16.0
 
 WORKDIR /usr/src/app
 
@@ -12,4 +12,4 @@ COPY . .
 
 RUN npm run build
 
-CMD ["npm", "run", "dev"]
+CMD ["npm", "start"]

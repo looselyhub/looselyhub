@@ -14,12 +14,13 @@ const pusher = new Pusher({
 
 async function addUser(adminUser: { _id: string }, username: string) {
   const mongo = new Mongo()
-  await mongo.insert('users', {
+  const result = await mongo.insert('users', {
     owner: adminUser._id,
     username: username,
     email: username,
     createdAt: new Date(),
   })
+  return result.ops[0];
 }
 
 async function unsetOldHome(
@@ -99,7 +100,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const { body } = req
     const token = authorization.split(' ')[1]
-
     validateBody(body)
     const adminUser = await ServerUtils.getAdminUser(token)
     let urlUser

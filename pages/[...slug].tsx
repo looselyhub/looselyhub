@@ -25,6 +25,7 @@ function Dashboard() {
   const router = useRouter()
   const [reloading, setReloading] = useState(false)
   const [currentURL, setURL] = useState<string | string[]>('')
+  const [showDrawer, setShowDrawer] = useState(false);
   const [gridTemplate, setGridTemplate] = useState(undefined)
   const [currentTitle, setTitle] = useState('LooselyHub')
   const [open, setOpen] = useState(false)
@@ -55,6 +56,7 @@ function Dashboard() {
       eventLogger.pageView(router.asPath)
     }
     setURL(url)
+    setShowDrawer(saasList.getShowMenu(router.asPath))
     setGridTemplate(newGridTemplate)
     setTitle(saasList.getTitleForSlug(router.asPath))
   }, [router, saasList])
@@ -119,6 +121,10 @@ function Dashboard() {
   }
 
   function drawer() {
+    console.log('drawer SaasList', saasList.getList());
+    if (showDrawer === false) {
+      return <div />
+    }
     return (
       <div className={openStyle()}>
         {renderLogo()}

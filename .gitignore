@@ -38,3 +38,7 @@ package-lock.json
 .env.old.local
 
 data/
+
+RELEASE/
+
+DEBUG/

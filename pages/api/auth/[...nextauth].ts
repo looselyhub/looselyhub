@@ -2,8 +2,6 @@ import NextAuth from 'next-auth'
 import Providers from 'next-auth/providers'
 import { LoginLog } from '../events/log'
 
-// TUTORIAL: https://blog.logrocket.com/using-authentication-in-next-js/
-
 const options = {
   site: process.env.NEXTAUTH_URL,
   providers: [
@@ -11,13 +9,9 @@ const options = {
       server: {
         port: 465,
         host: 'smtp.gmail.com',
-        secure: true,
         auth: {
           user: process.env.EMAIL_USERNAME,
           pass: process.env.EMAIL_PASSWORD,
-        },
-        tls: {
-          rejectUnauthorized: false,
         },
       },
       from: process.env.EMAIL_FROM,

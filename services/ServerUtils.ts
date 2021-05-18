@@ -25,6 +25,7 @@ class ServerUtils {
     body: {
       slug: string
       overwrite: boolean
+      isPublic?: boolean
     },
     user?: { _id: string }
   ) {
@@ -43,7 +44,7 @@ class ServerUtils {
         owner: adminUser._id,
         slug: body.slug,
       })
-      if (response.length === 1 && !body.overwrite) {
+      if (response.length === 1 && (!body.overwrite || body.isPublic)) {
         return true
       }
     }
