@@ -4,6 +4,7 @@ data
 .github
 test
 docs
+DEBUG
 .next
 package-lock.json
 yarn.lock
