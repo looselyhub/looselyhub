@@ -72,11 +72,9 @@ class SaasList {
   getShowMenu(path: string) {
     const slug = path.replace('/', '')
     if (slug === 'home' && this._home) {
-      console.log('HOME', this._home.showMenu);
       return this._home.showMenu
     }
     if (Object.keys(this._list).length > 0 && this._list[slug]) {
-      console.log(slug, this._list[slug].showMenu);
       return this._list[slug].showMenu
     }
     return false

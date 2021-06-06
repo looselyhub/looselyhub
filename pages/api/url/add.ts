@@ -4,13 +4,16 @@ import ServerUtils from 'services/ServerUtils'
 import Mongo from 'services/Mongo'
 import Pusher from 'pusher'
 
-const pusher = new Pusher({
-  appId: process.env.PUSHER_APP_ID,
-  key: process.env.NEXT_PUBLIC_PUSHER,
-  secret: process.env.PUSHER_SECRET,
-  cluster: 'us2',
-  useTLS: true,
-})
+let pusher
+if (process.env.PUSHER_SECRET) {
+  pusher = new Pusher({
+    appId: process.env.PUSHER_APP_ID,
+    key: process.env.NEXT_PUBLIC_PUSHER,
+    secret: process.env.PUSHER_SECRET,
+    cluster: 'us2',
+    useTLS: true,
+  })
+}
 
 async function addUser(adminUser: { _id: string }, username: string) {
   const mongo = new Mongo()
@@ -20,7 +23,7 @@ async function addUser(adminUser: { _id: string }, username: string) {
     email: username,
     createdAt: new Date(),
   })
-  return result.ops[0];
+  return result.ops[0]
 }
 
 async function unsetOldHome(
@@ -117,9 +120,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       await unsetOldHome(adminUser, urlUser)
     }
     await addRow(adminUser, body, urlUser)
-    pusher.trigger('saas-change', 'saas-change', {
-      message: 'SAAS CHANGED',
-    })
+    if (pusher) {
+      pusher.trigger('saas-change', 'saas-change', {
+        message: 'SAAS CHANGED',
+      })
+    }
     res.status(200)
     return res.json({ text: 'URL added for username!' })
   } catch (error) {

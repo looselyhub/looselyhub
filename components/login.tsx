@@ -34,7 +34,7 @@ export default function SignIn() {
     }
     if (showErrorAlert) {
       return (
-        <p style={{ color: '#EF767A' }}>This email is not redistered yet!</p>
+        <p style={{ color: '#EF767A' }}>This email is not registered yet!</p>
       )
     }
     return <div />

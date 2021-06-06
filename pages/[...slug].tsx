@@ -11,9 +11,12 @@ import SaasRow from 'components/SaasRow'
 import Pusher from 'pusher-js'
 import styles from '../styles/slug.module.scss'
 
-const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER, {
-  cluster: 'us2',
-})
+let pusher
+if (process.env.NEXT_PUBLIC_PUSHER) {
+  pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER, {
+    cluster: 'us2',
+  })
+}
 
 function Dashboard() {
   const primaryColor = process.env.NEXT_PUBLIC_PRIMARY_COLOR
@@ -25,7 +28,7 @@ function Dashboard() {
   const router = useRouter()
   const [reloading, setReloading] = useState(false)
   const [currentURL, setURL] = useState<string | string[]>('')
-  const [showDrawer, setShowDrawer] = useState(false);
+  const [showDrawer, setShowDrawer] = useState(false)
   const [gridTemplate, setGridTemplate] = useState(undefined)
   const [currentTitle, setTitle] = useState('LooselyHub')
   const [open, setOpen] = useState(false)
@@ -39,13 +42,15 @@ function Dashboard() {
 
   useEffect(() => {
     fetchSaasList()
-    const channel = pusher.subscribe('saas-change')
-    channel.bind('saas-change', function () {
-      if (reloading === false) {
-        setReloading(true)
-        fetchSaasList()
-      }
-    })
+    if (pusher) {
+      const channel = pusher.subscribe('saas-change')
+      channel.bind('saas-change', function () {
+        if (reloading === false) {
+          setReloading(true)
+          fetchSaasList()
+        }
+      })
+    }
   }, [])
 
   useEffect(() => {
@@ -121,7 +126,6 @@ function Dashboard() {
   }
 
   function drawer() {
-    console.log('drawer SaasList', saasList.getList());
     if (showDrawer === false) {
       return <div />
     }

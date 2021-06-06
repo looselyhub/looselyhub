@@ -4,13 +4,16 @@ import ServerUtils from 'services/ServerUtils'
 import Mongo from 'services/Mongo'
 import Pusher from 'pusher'
 
-const pusher = new Pusher({
-  appId: process.env.PUSHER_APP_ID,
-  key: process.env.NEXT_PUBLIC_PUSHER,
-  secret: process.env.PUSHER_SECRET,
-  cluster: 'us2',
-  useTLS: true,
-})
+let pusher
+if (process.env.PUSHER_SECRET) {
+  pusher = new Pusher({
+    appId: process.env.PUSHER_APP_ID,
+    key: process.env.NEXT_PUBLIC_PUSHER,
+    secret: process.env.PUSHER_SECRET,
+    cluster: 'us2',
+    useTLS: true,
+  })
+}
 
 function validateBody(body: any) {
   if (body.isPublic !== true) {
@@ -51,9 +54,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       throw new ErrorManager('Slug does not exists for body!', 421)
     }
     await removeRow(body, urlUser)
-    pusher.trigger('saas-change', 'saas-change', {
-      message: 'SAAS CHANGED',
-    })
+    if (pusher) {
+      pusher.trigger('saas-change', 'saas-change', {
+        message: 'SAAS CHANGED',
+      })
+    }
     res.status(200)
     return res.json({ text: 'URL removed for username!' })
   } catch (error) {

@@ -1,0 +1,28 @@
+{
+  "variables": {
+    "token": "ba690cac91a8a149853394bf36e076153a3cac95421e99a5deb9395ec65a4d2b",
+    "image_name": "marketplace-snapshot-{{timestamp}}",
+    "apt_packages": "nginx"
+  },
+  "builders": [
+    {
+      "type": "digitalocean",
+      "api_token": "{{user `token`}}",
+      "image": "ubuntu-20-04-x64",
+      "region": "nyc1",
+      "size": "s-1vcpu-2gb",
+      "ssh_username": "root",
+      "snapshot_name": "{{user `image_name`}}"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline": ["cloud-init status --wait"]
+    },
+    {
+      "type": "shell",
+      "scripts": ["scripts/start.sh"]
+    }
+  ]
+}

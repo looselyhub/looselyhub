@@ -3,12 +3,12 @@ import Providers from 'next-auth/providers'
 import { LoginLog } from '../events/log'
 
 const options = {
-  site: process.env.NEXTAUTH_URL,
+  site: process.env.DOMAIN,
   providers: [
     Providers.Email({
       server: {
-        port: 465,
-        host: 'smtp.gmail.com',
+        port: Number(process.env.EMAIL_PORT),
+        host: process.env.EMAIL_HOST,
         auth: {
           user: process.env.EMAIL_USERNAME,
           pass: process.env.EMAIL_PASSWORD,
