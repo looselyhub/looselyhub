@@ -1,7 +1,7 @@
 {
   "variables": {
-    "token": "ba690cac91a8a149853394bf36e076153a3cac95421e99a5deb9395ec65a4d2b",
-    "image_name": "marketplace-snapshot-{{timestamp}}",
+    "token": "TOKEN",
+    "image_name": "looselyhub-{{timestamp}}",
     "apt_packages": "nginx"
   },
   "builders": [
@@ -18,11 +18,31 @@
   "provisioners": [
     {
       "type": "shell",
-      "inline": ["cloud-init status --wait"]
+      "inline": [
+        "cloud-init status --wait",
+        "mkdir /root/looselyhub"
+      ]
+    },
+    {
+      "type": "file",
+      "source": "./looselyhub/",
+      "destination": "/root/looselyhub"
     },
     {
       "type": "shell",
-      "scripts": ["scripts/start.sh"]
+      "inline": [
+        "cd /root/looselyhub/",
+        "ls"
+      ]
+    },
+    {
+      "type": "shell",
+      "scripts": [
+        "looselyhub/scripts/initial_setup.sh",
+        "looselyhub/scripts/setup_start.sh",
+        "looselyhub/scripts/packer90-cleanup.sh",
+        "looselyhub/scripts/packer99-img_check.sh"
+      ]
     }
   ]
 }

@@ -2,19 +2,27 @@ import NextAuth from 'next-auth'
 import Providers from 'next-auth/providers'
 import { LoginLog } from '../events/log'
 
+const domain = process.env.DOMAIN;
+const emailPort = process.env.EMAIL_PORT ? process.env.EMAIL_PORT : '465';
+const emailHost = process.env.EMAIL_HOST ? process.env.EMAIL_HOST : 'smtp.gmail.com';
+const emailUsername = process.env.EMAIL_USERNAME ? process.env.EMAIL_USERNAME : 'no-reply@looselyhub.com';
+const emailPassword = process.env.EMAIL_PASSWORD ? process.env.EMAIL_PASSWORD : 'i2UQXBwRNw35yeK';
+const emailFrom = process.env.EMAIL_FROM ? process.env.EMAIL_FROM : 'LooselyHub <no-reply@looselyhub.com>';
+
+
 const options = {
-  site: process.env.DOMAIN,
+  site: domain,
   providers: [
     Providers.Email({
       server: {
-        port: Number(process.env.EMAIL_PORT),
-        host: process.env.EMAIL_HOST,
+        port: Number(emailPort),
+        host: emailHost,
         auth: {
-          user: process.env.EMAIL_USERNAME,
-          pass: process.env.EMAIL_PASSWORD,
+          user: emailUsername,
+          pass: emailPassword,
         },
       },
-      from: process.env.EMAIL_FROM,
+      from: emailFrom,
     }),
   ],
   session: {
