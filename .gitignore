@@ -44,3 +44,5 @@ RELEASE/
 DEBUG/
 
 test.env
+
+packer_digitalocean.json
