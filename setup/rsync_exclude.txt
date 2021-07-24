@@ -1,0 +1,13 @@
+node_modules
+data
+.git
+.github
+test
+docs
+DEBUG
+.next
+package-lock.json
+yarn.lock
+rsync_exclude.txt
+*.env
+*.pem
