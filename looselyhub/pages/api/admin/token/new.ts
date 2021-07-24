@@ -22,10 +22,10 @@ function validateAuthorization(authorization) {
   const text = buff.toString('ascii').split(':')
   const username = text[0]
   const password = text[1]
-  if (username !== process.env.EMAIL_USERNAME) {
+  if (username !== process.env.ADMIN_USERNAME) {
     throw new ErrorManager('Invalid username!', 401)
   }
-  if (password !== process.env.EMAIL_PASSWORD) {
+  if (password !== process.env.ADMIN_PASSWORD) {
     throw new ErrorManager('Invalid password!', 401)
   }
   return username

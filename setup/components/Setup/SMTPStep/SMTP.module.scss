@@ -1,0 +1,14 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  grid-gap: 15px;
+}
+.cardWrap:last-child {
+  grid-column: span 2;
+}
+
+@media screen and (max-width: 780px) {
+  .grid {
+    display: block;
+  }
+}

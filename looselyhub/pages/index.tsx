@@ -19,22 +19,27 @@ function Index() {
     }
   }, [loading])
 
-  return (
-    <div>
-      <Head>
-        <link rel="shortcut icon" href={favicon} />
-        <title>Sign In</title>
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
-        />
-        <GA />
-      </Head>
-      <Yandex />
-      <Loading active={loading} />
-      {!loading && !session ? <Login /> : <div />}
-    </div>
-  )
+  function renderSignIn() {
+    return (
+      <div>
+        <Head>
+          <link rel="shortcut icon" href={favicon} />
+          <title>Sign In</title>
+          <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+          />
+          <GA />
+        </Head>
+        <Yandex />
+        <Loading active={loading} />
+        {!loading && !session ? <Login /> : <div />}
+      </div>
+    )
+  }
+
+  return renderSignIn()
+  
 }
 
 export default Index

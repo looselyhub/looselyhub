@@ -46,3 +46,11 @@ DEBUG/
 test.env
 
 packer_digitalocean.json
+
+looselyhub/node_modules/
+
+looselyhub/.next/
+
+todo.txt
+
+setup/yarn.lock
