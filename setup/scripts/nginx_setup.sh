@@ -1,3 +1,5 @@
+cd /root/setup
+
 sudo rm /etc/nginx/sites-available/default
 sudo rm /etc/nginx/sites-enabled/default
 mv nginx_template.com default

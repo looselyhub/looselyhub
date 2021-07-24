@@ -7,7 +7,7 @@ const writeFile = util.promisify(require('fs').writeFile);
 
 function createEnvContent(setupProps: any) {
   let result = '';
-  result += `DOMAIN=https://${setupProps.domain}\n`;
+  result += `NEXTAUTH_URL=https://${setupProps.domain}\n`;
   
   result += `EMAIL_PORT=${setupProps.port}\n`;
   result += `EMAIL_HOST=${setupProps.host}\n`;
@@ -62,7 +62,12 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       throw stderr2;
     }
     console.log('stdout2', stdout2);
-    return res.send('Sucesso');
+    res.send('Sucesso');
+    const { stdout, stderr } = await exec(`sudo systemctl restart nginx`);
+    if (stderr) {
+      throw stderr;
+    }
+    console.log('stdout', stdout);
   } catch (error) {
     console.log(error)
     if (error instanceof ErrorManager) {

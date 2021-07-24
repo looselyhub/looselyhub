@@ -3,7 +3,7 @@ import Providers from 'next-auth/providers'
 import { LoginLog } from '../events/log'
 
 const options = {
-  site: process.env.DOMAIN,
+  site: process.env.NEXTAUTH_URL,
   providers: [
     Providers.Email({
       server: {

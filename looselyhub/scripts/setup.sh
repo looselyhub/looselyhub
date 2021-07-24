@@ -1,5 +1,7 @@
 cd /root/looselyhub
 
+sudo sh ./scripts/install.sh
+
 sudo ufw allow 'Nginx Full'
 sudo ufw limit ssh
 sudo ufw --force enable
@@ -12,6 +14,3 @@ mv nginx_template.com $1
 sudo mv ./$1 /etc/nginx/sites-available/
 sudo ln -s /etc/nginx/sites-available/$1 /etc/nginx/sites-enabled/
 sudo certbot --nginx -d $1 -d www.$1 --non-interactive --agree-tos -m $2 --redirect
-sudo systemctl restart nginx
-
-sudo sh ./scripts/install.sh
