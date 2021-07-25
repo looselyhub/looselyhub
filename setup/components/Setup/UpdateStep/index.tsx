@@ -11,11 +11,23 @@ type Props = {
 export default function UpdateStep(props: Props): JSX.Element {
 
   const [building, setBuilding] = useState(true);
+  const [loadingTimer, setLoadingTimer] = useState(10);
+
+  function timeout(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
   async function updateBuild() {
     const response = await axios.post('/api/setup', props.setupProps)
     console.log('DONE', response.data)
+    await timeout(20000);
     setBuilding(false)
+    for (let i = 10; i > 0; i-=1) {
+      setLoadingTimer(i);
+      await timeout(1000);
+    }
+    await timeout(1000);
+    window.location.href = `https://${props.setupProps.domain}`;
   }
 
   useEffect(() => {
@@ -33,7 +45,10 @@ export default function UpdateStep(props: Props): JSX.Element {
           <ReactLoading type={'spokes'} color={'#FCE247'} height={100} width={100} />
           <br/>
           </div>
-        : <h1 style={{color: '#23F0C7'}}>COMPLETED</h1>
+        : <div>
+          <h1 style={{color: '#23F0C7'}}>COMPLETED</h1>
+          <h2>You will be redirected in {loadingTimer} seconds</h2>
+        </div>
       }
     </div>
   )

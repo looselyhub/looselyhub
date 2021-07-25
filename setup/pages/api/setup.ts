@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import ErrorManager from 'services/ErrorManager';
 import util from 'util';
-const exec = util.promisify(require('child_process').exec);
+import child_process from 'child_process';
 import { existsSync, unlinkSync } from 'fs';
 const writeFile = util.promisify(require('fs').writeFile);
 
@@ -57,17 +57,22 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     const envText = createEnvContent(req.body);
     await writeFile('.env.local', envText);
 
-    const { stdout2, stderr2 } = await exec(`sh ./scripts/start.sh ${req.body.domain} ${req.body.user}`);
-    if (stderr2) {
-      throw stderr2;
-    }
-    console.log('stdout2', stdout2);
-    res.send('Sucesso');
-    const { stdout, stderr } = await exec(`sudo systemctl restart nginx`);
-    if (stderr) {
-      throw stderr;
-    }
-    console.log('stdout', stdout);
+    const process = child_process.spawn('sh', ['./scripts/install_looselyhub.sh', req.body.domain, req.body.user]);
+    process.stdout.on('data', (data) => {
+      console.log(`stdout:\n${data}`);
+    });
+    process.stderr.on('data', (data) => {
+      console.error(`stderr: ${data}`);
+    });
+    process.on('error', (error) => {
+      console.error(`error: ${error.message}`);
+      throw error;
+    });
+    process.on('close', (code) => {
+      console.log(`child process exited with code ${code}`);
+      res.status(200)
+      res.send(`child process exited with code ${code}`);
+    });
   } catch (error) {
     console.log(error)
     if (error instanceof ErrorManager) {

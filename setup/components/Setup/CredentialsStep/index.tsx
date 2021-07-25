@@ -25,7 +25,7 @@ export default function CredentialsStep(props: Props): JSX.Element {
     <div >
         <h2>API Setup</h2>
         <p style={{textAlign:'left'}}>It's time to create your admin account.<br/>
-          Now you will create your <b>username</b> and <b>password</b> to use LooselyHubs API.</p>
+          Now you will create your <b>username</b> and <b>password</b> to use LooselyHub's API.</p>
           <p><b>SAVE THEM IN A SAFE PLACE!</b></p>
         <p>
           To access the API documentation go to: <br/>
