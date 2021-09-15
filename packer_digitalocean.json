@@ -1,6 +1,6 @@
 {
   "variables": {
-    "token": "TOKEN",
+    "token": "2df4ba41505fc3692eaa89e635e41cd1fdd6c96dae610a2e68e4ff7aed54c4f1",
     "image_name": "looselyhub-{{timestamp}}",
     "apt_packages": "nginx"
   },

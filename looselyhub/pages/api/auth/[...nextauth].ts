@@ -35,6 +35,9 @@ const options = {
     },
     session: async (session, user) => {
       session.user = user.user
+      if (user.email === process.env.ADMIN_USERNAME) {
+        session.role = 'admin'
+      }
       return Promise.resolve(session)
     },
   },

@@ -13,9 +13,14 @@ function Index() {
     : '/favicon.ico'
   const [session, loading] = useSession()
   const router = useRouter()
+
   useEffect(() => {
     if (!loading && session) {
-      router.push('/home')
+      if (session.role === 'admin') {
+        router.push('/admin')
+      } else {
+        router.push('/home')
+      }
     }
   }, [loading])
 
@@ -39,7 +44,6 @@ function Index() {
   }
 
   return renderSignIn()
-  
 }
 
 export default Index

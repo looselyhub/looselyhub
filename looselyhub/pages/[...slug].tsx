@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import Head from 'next/head'
 import PrivateRoute from 'components/PrivateRoute'
 import Saas from 'components/Saas'
@@ -10,6 +10,7 @@ import GA from 'components/GA'
 import SaasRow from 'components/SaasRow'
 import Pusher from 'pusher-js'
 import styles from '../styles/slug.module.scss'
+import Sidebar from 'components/Sidebar/Sidebar'
 
 let pusher
 if (process.env.NEXT_PUBLIC_PUSHER) {
@@ -19,12 +20,6 @@ if (process.env.NEXT_PUBLIC_PUSHER) {
 }
 
 function Dashboard() {
-  const primaryColor = process.env.NEXT_PUBLIC_PRIMARY_COLOR
-    ? process.env.NEXT_PUBLIC_PRIMARY_COLOR
-    : '#EF767A'
-  const secondaryColor = process.env.NEXT_PUBLIC_SECONDARY_COLOR
-    ? process.env.NEXT_PUBLIC_SECONDARY_COLOR
-    : '#FCE247'
   const router = useRouter()
   const [reloading, setReloading] = useState(false)
   const [currentURL, setURL] = useState<string | string[]>('')
@@ -66,49 +61,6 @@ function Dashboard() {
     setTitle(saasList.getTitleForSlug(router.asPath))
   }, [router, saasList])
 
-  function redirectToLooselyHub() {
-    window.location.href = 'http://www.looselyhub.com/?ref=demo'
-  }
-
-  function sideBarOpenStyle() {
-    if (!open) {
-      return styles.hamburguerClosed
-    }
-    return styles.hamburguer
-  }
-
-  function styleLogo() {
-    if (!open) {
-      return styles.logoClosed
-    }
-    return styles.logo
-  }
-
-  function renderLogo() {
-    return (
-      <div
-        className={styles.sidebarHeader}
-        style={{ backgroundColor: primaryColor }}
-      >
-        <div className={sideBarOpenStyle()} onClick={() => setOpen(!open)}>
-          <div style={{ backgroundColor: secondaryColor }}></div>
-          <div style={{ backgroundColor: secondaryColor }}></div>
-          <div style={{ backgroundColor: secondaryColor }}></div>
-        </div>
-
-        <img
-          className={styleLogo()}
-          src={
-            process.env.NEXT_PUBLIC_LOGO
-              ? process.env.NEXT_PUBLIC_LOGO
-              : '/logo.png'
-          }
-          onClick={() => redirectToLooselyHub()}
-        />
-      </div>
-    )
-  }
-
   function renderHome() {
     if (saasList.getHome() === undefined) return <div />
     return <SaasRow open={open} page={saasList.getHome()} update={updatePage} />
@@ -118,31 +70,20 @@ function Dashboard() {
     router.push(`/${page.slug}`)
   }
 
-  function openStyle() {
-    if (!open) {
-      return styles.sidebarClosed
+  const createListElements = useCallback(() => {
+    const result: Array<JSX.Element> = [<li key="home">{renderHome()}</li>]
+    {
+      saasList.getList().forEach((page) =>
+        result.push(
+          <li key={page.slug}>
+            <SaasRow open={open} page={page} update={updatePage} />
+          </li>
+        )
+      )
     }
-    return styles.sidebar
-  }
+    return result
+  }, [saasList])
 
-  function drawer() {
-    if (showDrawer === false) {
-      return <div />
-    }
-    return (
-      <div className={openStyle()}>
-        {renderLogo()}
-        <ul className={styles.list}>
-          <li>{renderHome()}</li>
-          {saasList.getList().map((page) => (
-            <li key={page.slug}>
-              <SaasRow open={open} page={page} update={updatePage} />
-            </li>
-          ))}
-        </ul>
-      </div>
-    )
-  }
   const favicon = process.env.NEXT_PUBLIC_FAVICON
     ? process.env.NEXT_PUBLIC_FAVICON
     : '/favicon.ico'
@@ -163,7 +104,15 @@ function Dashboard() {
         <GA />
       </Head>
       <Yandex />
-      {drawer()}
+      {showDrawer ? (
+        <Sidebar
+          open={open}
+          setOpen={setOpen}
+          listElements={createListElements()}
+        />
+      ) : (
+        <></>
+      )}
       <Saas url={currentURL} gridTemplate={gridTemplate} />
       <style global jsx>{`
         html,
